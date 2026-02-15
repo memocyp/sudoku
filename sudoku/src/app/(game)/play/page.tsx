@@ -1,0 +1,404 @@
+'use client';
+
+import { Suspense, useEffect, useCallback } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { Pause, Play } from 'lucide-react';
+import { useGameStore } from '@/stores/gameStore';
+import { useKeyboard } from '@/hooks/useKeyboard';
+import type { Difficulty } from '@/engine/types';
+import { DIFFICULTY_DISPLAY } from '@/engine/types';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatDuration } from '@/lib/scoring';
+
+// ---------------------------------------------------------------------------
+// Difficulty Selector (inline, for when no game is active)
+// ---------------------------------------------------------------------------
+
+const DIFFICULTIES: Difficulty[] = ['beginner', 'easy', 'medium', 'hard', 'expert'];
+
+const DIFFICULTY_COLORS: Record<Difficulty, string> = {
+  beginner: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+  easy: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+  medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+  hard: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
+  expert: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+};
+
+// ---------------------------------------------------------------------------
+// Timer display component
+// ---------------------------------------------------------------------------
+
+function TimerDisplay() {
+  const elapsedMs = useGameStore((s) => s.elapsedMs);
+  const isTimerRunning = useGameStore((s) => s.isTimerRunning);
+  const tick = useGameStore((s) => s.tick);
+
+  useEffect(() => {
+    if (!isTimerRunning) return;
+    const interval = setInterval(() => tick(), 1000);
+    return () => clearInterval(interval);
+  }, [isTimerRunning, tick]);
+
+  return (
+    <div className="text-2xl font-mono font-semibold tabular-nums">
+      {formatDuration(elapsedMs)}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Pause Overlay
+// ---------------------------------------------------------------------------
+
+function PauseOverlay() {
+  const isTimerRunning = useGameStore((s) => s.isTimerRunning);
+  const isComplete = useGameStore((s) => s.isComplete);
+  const puzzle = useGameStore((s) => s.puzzle);
+  const startTimer = useGameStore((s) => s.startTimer);
+
+  const hasGame = puzzle.some((v) => v !== 0);
+  const isPaused = hasGame && !isTimerRunning && !isComplete;
+
+  if (!isPaused) return null;
+
+  return (
+    <motion.div
+      className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm rounded-lg"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 } as const}
+    >
+      <Pause className="size-12 text-muted-foreground mb-4" />
+      <p className="text-lg font-medium mb-4">Game Paused</p>
+      <Button onClick={startTimer} size="lg">
+        <Play className="size-5 mr-2" />
+        Resume
+      </Button>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Game Complete Dialog (inline)
+// ---------------------------------------------------------------------------
+
+function GameOverDialog() {
+  const isComplete = useGameStore((s) => s.isComplete);
+  const elapsedMs = useGameStore((s) => s.elapsedMs);
+  const difficulty = useGameStore((s) => s.difficulty);
+  const hintsUsed = useGameStore((s) => s.hintsUsed);
+  const mistakesMade = useGameStore((s) => s.mistakesMade);
+  const newGame = useGameStore((s) => s.newGame);
+
+  if (!isComplete) return null;
+
+  return (
+    <motion.div
+      className="absolute inset-0 z-30 flex items-center justify-center bg-background/90 backdrop-blur-sm rounded-lg"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.3, ease: 'easeOut' } as const}
+    >
+      <Card className="w-full max-w-sm mx-4">
+        <CardHeader>
+          <CardTitle className="text-center text-xl">Puzzle Complete!</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-4 text-center">
+            <div>
+              <p className="text-sm text-muted-foreground">Time</p>
+              <p className="text-lg font-semibold">{formatDuration(elapsedMs)}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Difficulty</p>
+              <p className="text-lg font-semibold">{DIFFICULTY_DISPLAY[difficulty]}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Hints Used</p>
+              <p className="text-lg font-semibold">{hintsUsed}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Mistakes</p>
+              <p className="text-lg font-semibold">{mistakesMade}</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button className="flex-1" onClick={() => newGame(difficulty)}>
+              Play Again
+            </Button>
+            <Button className="flex-1" variant="outline" onClick={() => newGame('medium')}>
+              New Game
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Hint Overlay
+// ---------------------------------------------------------------------------
+
+function HintOverlay() {
+  const hintResult = useGameStore((s) => s.hintResult);
+  const dismissHint = useGameStore((s) => s.dismissHint);
+
+  if (!hintResult) return null;
+
+  return (
+    <motion.div
+      className="absolute bottom-4 left-4 right-4 z-20"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 } as const}
+    >
+      <Card className="bg-primary/5 border-primary/20">
+        <CardContent className="flex items-start gap-3 pt-4">
+          <div className="flex-1">
+            <p className="text-sm font-medium">{hintResult.techniqueName}</p>
+            {hintResult.explanation && (
+              <p className="text-xs text-muted-foreground mt-1">{hintResult.explanation}</p>
+            )}
+          </div>
+          <Button variant="ghost" size="sm" onClick={dismissHint}>
+            Dismiss
+          </Button>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Board placeholder (renders the 9x9 grid)
+// ---------------------------------------------------------------------------
+
+function SudokuBoard() {
+  const board = useGameStore((s) => s.board);
+  const puzzle = useGameStore((s) => s.puzzle);
+  const selectedCell = useGameStore((s) => s.selectedCell);
+  const selectCell = useGameStore((s) => s.selectCell);
+
+  return (
+    <div className="grid grid-cols-9 gap-0 border-2 border-foreground/80 rounded-md overflow-hidden aspect-square w-full max-w-[450px]">
+      {board.map((value, index) => {
+        const row = Math.floor(index / 9);
+        const col = index % 9;
+        const isGiven = puzzle[index] !== 0;
+        const isSelected = selectedCell === index;
+
+        return (
+          <button
+            key={index}
+            className={`
+              flex items-center justify-center text-sm sm:text-base font-medium aspect-square
+              border border-muted-foreground/20
+              ${col % 3 === 2 && col !== 8 ? 'border-r-2 border-r-foreground/60' : ''}
+              ${row % 3 === 2 && row !== 8 ? 'border-b-2 border-b-foreground/60' : ''}
+              ${isSelected ? 'bg-primary/20' : 'hover:bg-muted/60'}
+              ${isGiven ? 'font-bold text-foreground' : 'text-primary'}
+              transition-colors
+            `}
+            onClick={() => selectCell(index)}
+            aria-label={`Cell row ${row + 1} column ${col + 1}${value ? ` value ${value}` : ' empty'}`}
+          >
+            {value !== 0 ? value : ''}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Number Pad
+// ---------------------------------------------------------------------------
+
+function NumberPad() {
+  const enterDigit = useGameStore((s) => s.enterDigit);
+  const toggleNote = useGameStore((s) => s.toggleNote);
+  const isNotesMode = useGameStore((s) => s.isNotesMode);
+
+  const handleDigit = useCallback(
+    (digit: number) => {
+      if (isNotesMode) {
+        toggleNote(digit);
+      } else {
+        enterDigit(digit);
+      }
+    },
+    [isNotesMode, enterDigit, toggleNote],
+  );
+
+  return (
+    <div className="grid grid-cols-9 gap-1 w-full max-w-[450px]">
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((digit) => (
+        <Button
+          key={digit}
+          variant="outline"
+          className="aspect-square text-lg font-semibold"
+          onClick={() => handleDigit(digit)}
+        >
+          {digit}
+        </Button>
+      ))}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Game Toolbar
+// ---------------------------------------------------------------------------
+
+function GameToolbar() {
+  const undo = useGameStore((s) => s.undo);
+  const redo = useGameStore((s) => s.redo);
+  const erase = useGameStore((s) => s.erase);
+  const isNotesMode = useGameStore((s) => s.isNotesMode);
+  const setNotesMode = useGameStore((s) => s.setNotesMode);
+  const requestHint = useGameStore((s) => s.requestHint);
+  const pauseTimer = useGameStore((s) => s.pauseTimer);
+  const isTimerRunning = useGameStore((s) => s.isTimerRunning);
+  const startTimer = useGameStore((s) => s.startTimer);
+
+  return (
+    <div className="flex items-center justify-center gap-2 flex-wrap">
+      <Button variant="outline" size="sm" onClick={undo}>
+        Undo
+      </Button>
+      <Button variant="outline" size="sm" onClick={redo}>
+        Redo
+      </Button>
+      <Button variant="outline" size="sm" onClick={erase}>
+        Erase
+      </Button>
+      <Button
+        variant={isNotesMode ? 'default' : 'outline'}
+        size="sm"
+        onClick={() => setNotesMode(!isNotesMode)}
+      >
+        Notes {isNotesMode ? 'ON' : 'OFF'}
+      </Button>
+      <Button variant="outline" size="sm" onClick={requestHint}>
+        Hint
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => (isTimerRunning ? pauseTimer() : startTimer())}
+      >
+        {isTimerRunning ? <Pause className="size-4" /> : <Play className="size-4" />}
+      </Button>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Main Play Page Content (inside Suspense)
+// ---------------------------------------------------------------------------
+
+function PlayPageContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const difficulty = (searchParams.get('difficulty') || 'medium') as Difficulty;
+
+  const puzzle = useGameStore((s) => s.puzzle);
+  const newGame = useGameStore((s) => s.newGame);
+
+  const hasGame = puzzle.some((v) => v !== 0);
+
+  // Initialize game on mount
+  useEffect(() => {
+    if (!hasGame) {
+      newGame(difficulty);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Keyboard controls
+  useKeyboard();
+
+  // If no active game, show difficulty selector
+  if (!hasGame) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <motion.div
+          className="max-w-2xl mx-auto text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 } as const}
+        >
+          <h1 className="text-3xl font-bold mb-8">Select Difficulty</h1>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {DIFFICULTIES.map((d) => (
+              <Card
+                key={d}
+                className="cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => {
+                  router.push(`/play?difficulty=${d}`);
+                  newGame(d);
+                }}
+              >
+                <CardContent className="flex flex-col items-center gap-2 pt-6">
+                  <span
+                    className={`inline-block rounded-full px-3 py-1 text-xs font-medium ${DIFFICULTY_COLORS[d]}`}
+                  >
+                    {DIFFICULTY_DISPLAY[d]}
+                  </span>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-6">
+      <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8">
+        {/* Left / Main column */}
+        <div className="flex flex-col items-center gap-4 w-full max-w-[450px]">
+          {/* Timer */}
+          <div className="flex items-center gap-4">
+            <TimerDisplay />
+          </div>
+
+          {/* Board container (relative for overlays) */}
+          <div className="relative w-full">
+            <SudokuBoard />
+            <PauseOverlay />
+            <GameOverDialog />
+            <HintOverlay />
+          </div>
+
+          {/* Toolbar */}
+          <GameToolbar />
+
+          {/* Number Pad */}
+          <NumberPad />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Page Export (with Suspense boundary)
+// ---------------------------------------------------------------------------
+
+export default function PlayPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      }
+    >
+      <PlayPageContent />
+    </Suspense>
+  );
+}
