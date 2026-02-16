@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
-import type { User, Provider } from '@supabase/supabase-js';
+import type { User } from '@supabase/supabase-js';
 
 export interface UseAuthReturn {
   user: User | null;
@@ -10,7 +10,6 @@ export interface UseAuthReturn {
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signUp: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
-  signInWithOAuth: (provider: Provider) => Promise<{ error: string | null }>;
 }
 
 export function useAuth(): UseAuthReturn {
@@ -69,15 +68,5 @@ export function useAuth(): UseAuthReturn {
     setUser(null);
   }, []);
 
-  const signInWithOAuth = useCallback(async (provider: Provider) => {
-    if (!isSupabaseConfigured) return { error: notConfiguredError };
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: { redirectTo: `${window.location.origin}/callback` },
-    });
-    return { error: error?.message ?? null };
-  }, []);
-
-  return { user, loading, signIn, signUp, signOut, signInWithOAuth };
+  return { user, loading, signIn, signUp, signOut };
 }

@@ -56,7 +56,7 @@ Both stores use immutable updates — boards/candidates are cloned via spread `[
 | `(game)` | `/play` — main game with board, toolbar, number pad |
 | `(learn)` | `/learn`, `/tutorials/[slug]`, `/guides/[slug]` |
 | `(stats)` | `/stats`, `/leaderboard` |
-| `(auth)` | `/login`, `/signup`, `/callback` (OAuth) |
+| `(auth)` | `/login`, `/signup` |
 | `api/` | `/api/stats` (GET/POST), `/api/leaderboard` (GET) |
 
 ## Supabase Integration

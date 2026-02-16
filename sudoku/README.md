@@ -64,7 +64,6 @@ Puzzles are generated with a two-phase algorithm:
 - **Anonymous-first**: Play without an account; sign in to persist stats and appear on leaderboards
 
 ### Authentication
-- Google and GitHub OAuth
 - Email/password signup
 - Anonymous play with optional account creation
 
@@ -127,7 +126,7 @@ src/
 │   ├── (game)/play/            # Main game page
 │   ├── (learn)/                # Learn hub, tutorials, guides
 │   ├── (stats)/                # Stats dashboard, leaderboard
-│   ├── (auth)/                 # Login, signup, OAuth callback
+│   ├── (auth)/                 # Login, signup
 │   └── api/                    # API routes (stats, leaderboard)
 ├── engine/                     # Pure TypeScript Sudoku engine
 │   ├── types.ts                # Core types & constants
@@ -237,15 +236,7 @@ CREATE POLICY "Users can insert own solve times" ON solve_times FOR INSERT WITH 
 CREATE POLICY "Percentile cache is public" ON percentile_cache FOR SELECT USING (true);
 ```
 
-### 3. Configure OAuth Providers
-
-In the Supabase Dashboard → Authentication → Providers:
-- **Google**: Add your Google OAuth client ID and secret
-- **GitHub**: Add your GitHub OAuth app client ID and secret
-
-Set the redirect URL to: `https://your-domain.com/callback`
-
-### 4. Add Environment Variables
+### 3. Add Environment Variables
 
 Copy the project URL and anon key from Dashboard → Settings → API into your `.env.local`.
 
@@ -294,7 +285,7 @@ vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 #### 4. Configure Domain (Optional)
 
-In Vercel Dashboard → Your Project → Settings → Domains, add your custom domain. Update the Supabase OAuth redirect URL to match.
+In Vercel Dashboard → Your Project → Settings → Domains, add your custom domain.
 
 ---
 
