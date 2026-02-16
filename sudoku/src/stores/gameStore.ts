@@ -47,6 +47,7 @@ export interface GameState {
 
   // Hint
   hintResult: HintDisplayData | null;
+  currentHintLevel: number;
 
   // Actions
   newGame: (difficulty: Difficulty) => void;
@@ -58,6 +59,7 @@ export interface GameState {
   redo: () => void;
   setNotesMode: (on: boolean) => void;
   requestHint: () => void;
+  requestMoreDetail: () => void;
   dismissHint: () => void;
   tick: () => void;
   startTimer: () => void;
@@ -136,6 +138,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   historyIndex: -1,
 
   hintResult: null,
+  currentHintLevel: 0,
 
   // -- Actions --
 
@@ -169,6 +172,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       history: initialHistory,
       historyIndex: 0,
       hintResult: null,
+      currentHintLevel: 0,
     });
   },
 
@@ -214,6 +218,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       mistakesMade: newMistakes,
       isComplete: complete,
       isTimerRunning: complete ? false : state.isTimerRunning,
+      hintResult: null,
+      currentHintLevel: 0,
       ...newHistory,
     });
   },
@@ -255,6 +261,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({
       board: newBoard,
       candidates: newCandidates,
+      hintResult: null,
+      currentHintLevel: 0,
       ...newHistory,
     });
   },
@@ -270,6 +278,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       board: cloneBoard(entry.board),
       candidates: cloneCandidates(entry.candidates),
       historyIndex: prevIndex,
+      hintResult: null,
+      currentHintLevel: 0,
     });
   },
 
@@ -284,6 +294,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       board: cloneBoard(entry.board),
       candidates: cloneCandidates(entry.candidates),
       historyIndex: nextIndex,
+      hintResult: null,
+      currentHintLevel: 0,
     });
   },
 
@@ -293,12 +305,11 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   requestHint: async () => {
     const state = get();
-    const { board, candidates, hintsUsed } = state;
+    const { board, hintsUsed } = state;
 
     try {
       const { getHint } = await import('@/engine/hint');
-      const level = hintsUsed + 1;
-      const result = getHint(board, level);
+      const result = getHint(board, 1);
 
       if (result) {
         const hintDisplay: HintDisplayData = {
@@ -312,6 +323,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
         set({
           hintResult: hintDisplay,
+          currentHintLevel: 1,
           hintsUsed: hintsUsed + 1,
         });
       }
@@ -320,8 +332,38 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
   },
 
+  requestMoreDetail: async () => {
+    const state = get();
+    const { board, currentHintLevel } = state;
+    if (currentHintLevel >= 4 || currentHintLevel === 0) return;
+
+    try {
+      const { getHint } = await import('@/engine/hint');
+      const newLevel = currentHintLevel + 1;
+      const result = getHint(board, newLevel);
+
+      if (result) {
+        const hintDisplay: HintDisplayData = {
+          level: result.level,
+          techniqueName: result.techniqueName,
+          region: result.region,
+          primaryCells: result.primaryCells,
+          secondaryCells: result.secondaryCells,
+          explanation: result.explanation,
+        };
+
+        set({
+          hintResult: hintDisplay,
+          currentHintLevel: newLevel,
+        });
+      }
+    } catch {
+      // Hint engine not available — silently ignore
+    }
+  },
+
   dismissHint: () => {
-    set({ hintResult: null });
+    set({ hintResult: null, currentHintLevel: 0 });
   },
 
   tick: () => {

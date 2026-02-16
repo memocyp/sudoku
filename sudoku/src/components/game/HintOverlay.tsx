@@ -10,32 +10,15 @@ import {
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 
-/** Map technique IDs to human-readable names */
-const TECHNIQUE_DISPLAY_NAMES: Record<string, string> = {
-  nakedSingle: 'Naked Single',
-  hiddenSingle: 'Hidden Single',
-  nakedPairs: 'Naked Pairs',
-  hiddenPairs: 'Hidden Pairs',
-  pointingPairs: 'Pointing Pairs',
-  boxLineReduction: 'Box/Line Reduction',
-  nakedTriples: 'Naked Triples',
-  hiddenTriples: 'Hidden Triples',
-  xWing: 'X-Wing',
-  swordfish: 'Swordfish',
-};
-
-function getTechniqueDisplayName(id: string): string {
-  return TECHNIQUE_DISPLAY_NAMES[id] ?? id;
-}
-
 export function HintOverlay() {
   const hintResult = useGameStore((s) => s.hintResult);
+  const currentHintLevel = useGameStore((s) => s.currentHintLevel);
   const dismissHint = useGameStore((s) => s.dismissHint);
+  const requestMoreDetail = useGameStore((s) => s.requestMoreDetail);
 
   if (!hintResult) return null;
 
-  const { level, techniqueName, region, explanation } = hintResult;
-  const displayName = getTechniqueDisplayName(techniqueName);
+  const { techniqueName, region, primaryCells, explanation } = hintResult;
 
   return (
     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-sm">
@@ -44,11 +27,9 @@ export function HintOverlay() {
           <div className="flex items-start justify-between gap-2">
             <CardTitle className="text-base">
               Hint
-              {level >= 1 && (
-                <span className="ml-2 text-sm font-normal text-muted-foreground">
-                  (Level {level})
-                </span>
-              )}
+              <span className="ml-2 text-sm font-normal text-muted-foreground">
+                (Level {currentHintLevel})
+              </span>
             </CardTitle>
             <Button
               variant="ghost"
@@ -62,24 +43,37 @@ export function HintOverlay() {
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
           {/* Level 1+: Technique name */}
-          {level >= 1 && (
-            <p>
-              <span className="font-medium">Technique:</span> {displayName}
-            </p>
-          )}
+          <p>
+            <span className="font-medium">Technique:</span> {techniqueName}
+          </p>
 
           {/* Level 2+: Region info */}
-          {level >= 2 && region && (
+          {currentHintLevel >= 2 && region && (
             <p>
               <span className="font-medium">Where to look:</span> {region}
             </p>
           )}
 
-          {/* Level 3+: Full explanation */}
-          {level >= 3 && explanation && (
+          {/* Level 3+: Cells */}
+          {currentHintLevel >= 3 && primaryCells && primaryCells.length > 0 && (
+            <p>
+              <span className="font-medium">Cells:</span>{' '}
+              {primaryCells.map((c) => `R${Math.floor(c / 9) + 1}C${(c % 9) + 1}`).join(', ')}
+            </p>
+          )}
+
+          {/* Level 4: Full explanation */}
+          {currentHintLevel >= 4 && explanation && (
             <p>
               <span className="font-medium">Explanation:</span> {explanation}
             </p>
+          )}
+
+          {/* More Detail button */}
+          {currentHintLevel < 4 && (
+            <Button variant="outline" size="sm" onClick={requestMoreDetail}>
+              More Detail
+            </Button>
           )}
         </CardContent>
       </Card>

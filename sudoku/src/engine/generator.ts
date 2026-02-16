@@ -157,7 +157,7 @@ export function generatePuzzle(difficulty: Difficulty): PuzzleData {
   return {
     puzzle: puzzle.slice(),
     solution: solution.slice(),
-    difficulty,
+    difficulty: finalGrade.difficulty,
     difficultyScore: finalGrade.score,
     techniques: finalGrade.techniques,
   };

@@ -144,7 +144,9 @@ function GameOverDialog() {
 
 function HintOverlay() {
   const hintResult = useGameStore((s) => s.hintResult);
+  const currentHintLevel = useGameStore((s) => s.currentHintLevel);
   const dismissHint = useGameStore((s) => s.dismissHint);
+  const requestMoreDetail = useGameStore((s) => s.requestMoreDetail);
 
   if (!hintResult) return null;
 
@@ -156,16 +158,34 @@ function HintOverlay() {
       transition={{ duration: 0.3 } as const}
     >
       <Card className="bg-primary/5 border-primary/20">
-        <CardContent className="flex items-start gap-3 pt-4">
-          <div className="flex-1">
-            <p className="text-sm font-medium">{hintResult.techniqueName}</p>
-            {hintResult.explanation && (
-              <p className="text-xs text-muted-foreground mt-1">{hintResult.explanation}</p>
+        <CardContent className="pt-4 space-y-2">
+          <p className="text-sm font-medium">
+            Try looking for a {hintResult.techniqueName}
+          </p>
+          {currentHintLevel >= 2 && hintResult.region && (
+            <p className="text-xs text-muted-foreground">
+              Look in {hintResult.region}
+            </p>
+          )}
+          {currentHintLevel >= 3 && hintResult.primaryCells && hintResult.primaryCells.length > 0 && (
+            <p className="text-xs text-muted-foreground">
+              Focus on cell{hintResult.primaryCells.length > 1 ? 's' : ''}{' '}
+              {hintResult.primaryCells.map((c) => `R${Math.floor(c / 9) + 1}C${(c % 9) + 1}`).join(', ')}
+            </p>
+          )}
+          {currentHintLevel >= 4 && hintResult.explanation && (
+            <p className="text-xs text-muted-foreground">{hintResult.explanation}</p>
+          )}
+          <div className="flex items-center gap-2 pt-1">
+            {currentHintLevel < 4 && (
+              <Button variant="outline" size="sm" onClick={requestMoreDetail}>
+                More Detail
+              </Button>
             )}
+            <Button variant="ghost" size="sm" onClick={dismissHint}>
+              Got it
+            </Button>
           </div>
-          <Button variant="ghost" size="sm" onClick={dismissHint}>
-            Dismiss
-          </Button>
         </CardContent>
       </Card>
     </motion.div>
@@ -326,14 +346,15 @@ function PlayPageContent() {
   const puzzle = useGameStore((s) => s.puzzle);
   const newGame = useGameStore((s) => s.newGame);
 
+  const currentDifficulty = useGameStore((s) => s.difficulty);
   const hasGame = puzzle.some((v) => v !== 0);
 
-  // Initialize game on mount
+  // Initialize game on mount or when difficulty changes
   useEffect(() => {
-    if (!hasGame) {
+    if (!hasGame || difficulty !== currentDifficulty) {
       newGame(difficulty);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [difficulty]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Keyboard controls
   useKeyboard();
