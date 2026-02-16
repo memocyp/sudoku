@@ -18,8 +18,7 @@ Play immediately without an account. Optionally sign up to persist stats and com
 - **Full keyboard support**: Arrow keys for navigation, 1–9 for digits, N for notes mode, Ctrl+Z/Y for undo/redo
 - **Notes mode**: Toggle candidate pencil marks on empty cells; auto-cleared from peer cells when a digit is placed
 - **Undo / Redo**: Full history with board snapshots
-- **Mistake detection**: Highlights incorrect digits with red background and text against the known solution
-- **Visual feedback**: Peer cell highlighting, same-digit highlighting, and animated digit placement
+- **Mistake detection**: Highlights incorrect digits against the known solution
 - **Timer**: Auto-starts on new game, pause/resume support
 
 ### Hint System (Progressive Disclosure)

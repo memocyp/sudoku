@@ -11,7 +11,6 @@ import type { Difficulty } from '@/engine/types';
 import { DIFFICULTY_DISPLAY, DIFFICULTY_MAP } from '@/engine/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { SudokuBoard } from '@/components/game/SudokuBoard';
 import { formatDuration } from '@/lib/scoring';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -212,6 +211,65 @@ function HintOverlay() {
         </CardContent>
       </Card>
     </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Board placeholder (renders the 9x9 grid)
+// ---------------------------------------------------------------------------
+
+function CandidateGrid({ mask }: { mask: number }) {
+  return (
+    <div className="grid grid-cols-3 grid-rows-3 w-full h-full p-px">
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => (
+        <span
+          key={d}
+          className="flex items-center justify-center text-[8px] sm:text-[10px] leading-none text-muted-foreground"
+        >
+          {mask & (1 << d) ? d : ''}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function SudokuBoard() {
+  const board = useGameStore((s) => s.board);
+  const puzzle = useGameStore((s) => s.puzzle);
+  const notes = useGameStore((s) => s.notes);
+  const selectedCell = useGameStore((s) => s.selectedCell);
+  const selectCell = useGameStore((s) => s.selectCell);
+
+  return (
+    <div className="grid grid-cols-9 gap-0 border-2 border-foreground/80 rounded-md overflow-hidden aspect-square w-full max-w-[450px]">
+      {board.map((value, index) => {
+        const row = Math.floor(index / 9);
+        const col = index % 9;
+        const isGiven = puzzle[index] !== 0;
+        const isSelected = selectedCell === index;
+        const isEmpty = value === 0;
+        const hasNotes = isEmpty && notes[index] !== 0;
+
+        return (
+          <button
+            key={index}
+            className={`
+              flex items-center justify-center text-sm sm:text-base font-medium aspect-square
+              border border-muted-foreground/20
+              ${col % 3 === 2 && col !== 8 ? 'border-r-2 border-r-foreground/60' : ''}
+              ${row % 3 === 2 && row !== 8 ? 'border-b-2 border-b-foreground/60' : ''}
+              ${isSelected ? 'bg-primary/20' : 'hover:bg-muted/60'}
+              ${isGiven ? 'font-bold text-foreground' : 'text-primary'}
+              transition-colors
+            `}
+            onClick={() => selectCell(index)}
+            aria-label={`Cell row ${row + 1} column ${col + 1}${value ? ` value ${value}` : ' empty'}`}
+          >
+            {value !== 0 ? value : hasNotes ? <CandidateGrid mask={notes[index]} /> : ''}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
