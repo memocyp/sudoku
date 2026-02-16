@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense, useEffect, useCallback, useRef } from 'react';
+import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Pause, Play } from 'lucide-react';
@@ -149,8 +150,8 @@ function GameOverDialog() {
             <Button className="flex-1" onClick={() => newGame(difficulty)}>
               Play Again
             </Button>
-            <Button className="flex-1" variant="outline" onClick={() => newGame('medium')}>
-              New Game
+            <Button className="flex-1" variant="outline" asChild>
+              <Link href="/play">New Difficulty</Link>
             </Button>
           </div>
         </CardContent>
@@ -362,7 +363,7 @@ function GameToolbar() {
 function PlayPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const difficulty = (searchParams.get('difficulty') || 'medium') as Difficulty;
+  const difficultyParam = searchParams.get('difficulty') as Difficulty | null;
 
   const puzzle = useGameStore((s) => s.puzzle);
   const newGame = useGameStore((s) => s.newGame);
@@ -370,18 +371,18 @@ function PlayPageContent() {
   const currentDifficulty = useGameStore((s) => s.difficulty);
   const hasGame = puzzle.some((v) => v !== 0);
 
-  // Initialize game on mount or when difficulty changes
+  // Only auto-start when an explicit difficulty query param is provided
   useEffect(() => {
-    if (!hasGame || difficulty !== currentDifficulty) {
-      newGame(difficulty);
+    if (difficultyParam && (!hasGame || difficultyParam !== currentDifficulty)) {
+      newGame(difficultyParam);
     }
-  }, [difficulty]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [difficultyParam]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Keyboard controls
   useKeyboard();
 
-  // If no active game, show difficulty selector
-  if (!hasGame) {
+  // Show difficulty selector when no game is active or no difficulty was chosen
+  if (!hasGame || !difficultyParam) {
     return (
       <div className="container mx-auto px-4 py-12">
         <motion.div
