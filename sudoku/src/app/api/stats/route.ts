@@ -1,29 +1,74 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/server';
 
 export async function GET(_request: NextRequest) {
-  // TODO: Fetch stats from Supabase for the authenticated user
-  // For now, return placeholder stats
-  return NextResponse.json({
-    stats: [],
-  });
+  if (!isSupabaseConfigured) {
+    return NextResponse.json({ stats: [] });
+  }
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { data, error } = await supabase
+    .from('solve_times')
+    .select('id, difficulty, solve_time_ms, hints_used, mistakes_made, puzzle_hash, created_at')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(100);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ stats: data });
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  if (!isSupabaseConfigured) {
+    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
+  }
 
-  // TODO: Save solve time to Supabase
-  // Expected body: { difficulty, solveTimeMs, hintsUsed, mistakesMade, score }
-  const { difficulty, solveTimeMs, hintsUsed, mistakesMade, score } = body as {
-    difficulty: string;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const body = await request.json();
+  const { difficulty, solveTimeMs, hintsUsed, mistakesMade, puzzleHash } = body as {
+    difficulty: number;
     solveTimeMs: number;
     hintsUsed: number;
     mistakesMade: number;
-    score: number;
+    puzzleHash?: string;
   };
 
-  // Placeholder: log and acknowledge
-  console.log('Stats submission:', { difficulty, solveTimeMs, hintsUsed, mistakesMade, score });
+  if (!difficulty || !solveTimeMs) {
+    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+  }
 
-  return NextResponse.json({ success: true });
+  const { data, error } = await supabase
+    .from('solve_times')
+    .insert({
+      user_id: user.id,
+      difficulty,
+      solve_time_ms: solveTimeMs,
+      hints_used: hintsUsed ?? 0,
+      mistakes_made: mistakesMade ?? 0,
+      puzzle_hash: puzzleHash ?? null,
+    })
+    .select('id')
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true, id: data.id });
 }
