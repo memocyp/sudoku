@@ -236,9 +236,15 @@ function CandidateGrid({ mask }: { mask: number }) {
 function SudokuBoard() {
   const board = useGameStore((s) => s.board);
   const puzzle = useGameStore((s) => s.puzzle);
+  const solution = useGameStore((s) => s.solution);
   const notes = useGameStore((s) => s.notes);
   const selectedCell = useGameStore((s) => s.selectedCell);
   const selectCell = useGameStore((s) => s.selectCell);
+  const isComplete = useGameStore((s) => s.isComplete);
+
+  // Only show errors when the board is fully filled but not correct
+  const isBoardFull = board.every((v) => v !== 0);
+  const showErrors = isBoardFull && !isComplete;
 
   return (
     <div className="grid grid-cols-9 gap-0 border-2 border-foreground/80 rounded-md overflow-hidden aspect-square w-full max-w-[450px]">
@@ -249,6 +255,7 @@ function SudokuBoard() {
         const isSelected = selectedCell === index;
         const isEmpty = value === 0;
         const hasNotes = isEmpty && notes[index] !== 0;
+        const isError = showErrors && value !== 0 && solution[index] !== 0 && value !== solution[index];
 
         return (
           <button
@@ -258,8 +265,8 @@ function SudokuBoard() {
               border border-muted-foreground/20
               ${col % 3 === 2 && col !== 8 ? 'border-r-2 border-r-foreground/60' : ''}
               ${row % 3 === 2 && row !== 8 ? 'border-b-2 border-b-foreground/60' : ''}
-              ${isSelected ? 'bg-primary/20' : 'hover:bg-muted/60'}
-              ${isGiven ? 'font-bold text-foreground' : 'text-primary'}
+              ${isError ? 'bg-red-100 dark:bg-red-900/40' : isSelected ? 'bg-primary/20' : 'hover:bg-muted/60'}
+              ${isError ? 'text-red-600 dark:text-red-400' : isGiven ? 'font-bold text-foreground' : 'text-primary'}
               transition-colors
             `}
             onClick={() => selectCell(index)}

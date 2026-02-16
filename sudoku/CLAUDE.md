@@ -86,3 +86,4 @@ Supabase clients in `src/lib/supabase/`. The app runs without Supabase credentia
 - Engine functions are pure — no React, no side effects, no dynamic imports.
 - `utils.ts` has legacy aliases (`rowOf` → `getRow`, etc.) for backward compatibility.
 - Components in `src/components/game/` read from stores via hooks; UI components in `src/components/ui/` are shadcn/ui primitives.
+- The play page uses an inline `SudokuBoard` (not the shared component) with deferred error highlighting: mistakes are only shown (red background + red text) when the board is completely filled but doesn't match the solution. No real-time error feedback during play.
