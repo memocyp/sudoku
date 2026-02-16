@@ -9,17 +9,22 @@
     },
     {
       "title": "Spot the pair",
-      "content": "Look at this row. Two cells both contain only the candidates {3, 7}. No other digits are possible in either cell.",
+      "content": "Look at row 3 on the board. Two cells are empty, and both can only contain the digits 3 and 7. No other digits are possible in either cell — they form a Naked Pair.",
+      "board": [9, 0, 1, 0, 2, 0, 8, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 9, 8, 1, 0, 2, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 2, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 2, 0, 0],
       "highlightCells": [18, 24],
       "highlightDigits": [3, 7]
     },
     {
       "title": "Why does this work?",
-      "content": "One of these cells must be 3 and the other must be 7 (or vice versa). We don't know which is which yet, but we know for certain that 3 and 7 are 'claimed' by this pair."
+      "content": "One of these cells must be 3 and the other must be 7 (or vice versa). We don't know which is which yet, but we know for certain that 3 and 7 are 'claimed' by this pair.",
+      "board": [9, 0, 1, 0, 2, 0, 8, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 9, 8, 1, 0, 2, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 2, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 2, 0, 0],
+      "highlightCells": [18, 24],
+      "highlightDigits": [3, 7]
     },
     {
       "title": "Eliminate from peers",
       "content": "Since 3 and 7 are locked into those two cells, we can safely remove 3 and 7 as candidates from every other cell in the same row. This often reveals new Naked or Hidden Singles.",
+      "board": [9, 0, 1, 0, 2, 0, 8, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 9, 8, 1, 0, 2, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 2, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 2, 0, 0],
       "highlightCells": [19, 20, 21, 22, 23, 25, 26],
       "highlightDigits": [3, 7]
     },

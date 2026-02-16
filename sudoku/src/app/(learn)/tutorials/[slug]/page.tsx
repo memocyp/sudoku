@@ -2,6 +2,7 @@
 
 import { use } from 'react';
 import { useTutorial } from '@/hooks/useTutorial';
+import { MiniBoard } from '@/components/learn/MiniBoard';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -92,11 +93,13 @@ function TutorialPlayer({ slug }: { slug: string }) {
         <CardContent>
           <p className="text-sm leading-relaxed">{currentStep.content}</p>
 
-          {currentStep.highlightCells && currentStep.highlightCells.length > 0 && (
-            <div className="mt-4 p-3 bg-muted rounded-md">
-              <p className="text-xs text-muted-foreground">
-                Highlighted cells: {currentStep.highlightCells.join(', ')}
-              </p>
+          {(currentStep.board || currentStep.highlightCells?.length || currentStep.highlightDigits?.length) && (
+            <div className="mt-4">
+              <MiniBoard
+                board={currentStep.board ?? Array(81).fill(0)}
+                highlightCells={currentStep.highlightCells}
+                highlightDigits={currentStep.highlightDigits}
+              />
             </div>
           )}
         </CardContent>

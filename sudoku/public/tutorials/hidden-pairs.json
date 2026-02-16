@@ -13,13 +13,15 @@
     },
     {
       "title": "Find the hidden pair",
-      "content": "Look at this box. The digits 4 and 8 only appear as candidates in two specific cells. Other cells in the box cannot contain 4 or 8.",
+      "content": "Look at the center box. Four cells are empty, but the digits 4 and 8 can only go in the two highlighted cells. The other two empty cells in the box can't hold 4 or 8 because both digits already appear in their row.",
+      "board": [0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 6, 7, 1, 0, 0, 0, 8, 0, 4, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       "highlightCells": [30, 32],
       "highlightDigits": [4, 8]
     },
     {
       "title": "The deduction",
-      "content": "Since 4 and 8 can only go in these two cells, those two cells must contain 4 and 8. This means all other candidates in those two cells can be safely removed.",
+      "content": "Since 4 and 8 can only go in these two cells within the box, those two cells must contain 4 and 8. This means all other candidates in those two cells can be safely removed.",
+      "board": [0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 6, 7, 1, 0, 0, 0, 8, 0, 4, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       "highlightCells": [30, 32],
       "highlightDigits": [4, 8]
     },

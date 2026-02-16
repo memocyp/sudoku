@@ -13,19 +13,22 @@
     },
     {
       "title": "Scan a box for a digit",
-      "content": "Let's look at this 3×3 box. We want to place the digit 5 somewhere in this box. Let's check which cells are available.",
+      "content": "Let's look at the left-center 3×3 box. We want to place the digit 5 somewhere in this box. Two cells are empty — let's check which ones can hold a 5.",
+      "board": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 8, 3, 0, 0, 0, 0, 0, 0, 1, 0, 9, 0, 0, 0, 0, 0, 0, 4, 0, 2, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0],
       "highlightCells": [27, 28, 29, 36, 37, 38, 45, 46, 47],
       "highlightDigits": [5]
     },
     {
       "title": "Eliminate cells",
-      "content": "Some cells already have digits. Others are blocked because 5 already appears in their row or column. After elimination, only one cell in the box can hold the digit 5.",
+      "content": "Cell 46 (bottom-middle of the box) can't contain 5 because 5 already appears in its row. That leaves only one cell in the box that can hold 5 — cell 37.",
+      "board": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 8, 3, 0, 0, 0, 0, 0, 0, 1, 0, 9, 0, 0, 0, 0, 0, 0, 4, 0, 2, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0],
       "highlightCells": [37],
       "highlightDigits": [5]
     },
     {
       "title": "Place the digit",
-      "content": "Since 5 can only go in one cell within this box, it must go there — even if the cell has other candidates too. That's what makes it 'hidden': the cell might look like it has multiple options, but for this specific digit, there's no other choice.",
+      "content": "Since 5 can only go in one cell within this box, it must go there — even though the cell also has 7 as a candidate. That's what makes it 'hidden': the cell has multiple options, but for digit 5, there's no other choice in this box.",
+      "board": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 8, 3, 0, 0, 0, 0, 0, 0, 1, 0, 9, 0, 0, 0, 0, 0, 0, 4, 0, 2, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0],
       "highlightCells": [37],
       "highlightDigits": [5]
     },

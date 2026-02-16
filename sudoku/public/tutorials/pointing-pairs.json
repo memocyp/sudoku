@@ -9,19 +9,22 @@
     },
     {
       "title": "Look inside a box",
-      "content": "Consider this 3×3 box. The digit 6 only appears as a candidate in cells along one row within the box. It cannot go anywhere else in this box.",
+      "content": "Consider the left-center box. Most cells are filled. The digit 6 is missing from this box — let's find where it can go.",
+      "board": [0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 7, 8, 1, 6, 0, 0, 0, 0, 0, 2, 3, 4, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       "highlightCells": [27, 28, 29, 36, 37, 38, 45, 46, 47],
       "highlightDigits": [6]
     },
     {
       "title": "The candidates point along a row",
-      "content": "The candidate 6 only appears in two cells, and both are in the same row. These candidates 'point' along the row, telling us something about cells outside the box.",
+      "content": "Only two cells in the box are empty, and both are in the same row (row 4). The digit 6 must go in one of these two cells. They 'point' along the row, telling us something about cells outside the box.",
+      "board": [0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 7, 8, 1, 6, 0, 0, 0, 0, 0, 2, 3, 4, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       "highlightCells": [27, 29],
       "highlightDigits": [6]
     },
     {
       "title": "Eliminate along the row",
-      "content": "Since 6 must go in one of these two cells (both in this row, both in this box), 6 cannot appear elsewhere in this row. Remove 6 as a candidate from all other cells in the row that are outside the box.",
+      "content": "Since 6 must go in one of these two cells (both in row 4, both in this box), 6 cannot appear elsewhere in row 4. Remove 6 as a candidate from all other cells in the row that are outside the box.",
+      "board": [0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 7, 8, 1, 6, 0, 0, 0, 0, 0, 2, 3, 4, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       "highlightCells": [30, 31, 32, 33, 34, 35],
       "highlightDigits": [6]
     },

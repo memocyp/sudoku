@@ -9,23 +9,29 @@
     },
     {
       "title": "Visualize the rectangle",
-      "content": "Imagine four cells at the corners of a rectangle. In row A, digit 4 can only go in columns 2 and 7. In row B, digit 4 can also only go in columns 2 and 7. These four cells form an X-Wing.",
+      "content": "On the board, digit 4 can only go in two cells in row 2 (columns 2 and 7) and two cells in row 8 (same columns 2 and 7). These four highlighted cells form the corners of a rectangle \u2014 an X-Wing pattern.",
+      "board": [5, 0, 8, 4, 9, 1, 0, 2, 6, 3, 0, 7, 8, 5, 2, 0, 9, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 9, 5, 1, 8, 0, 3, 7, 8, 0, 1, 7, 3, 9, 0, 5, 2],
       "highlightCells": [10, 15, 64, 69],
       "highlightDigits": [4]
     },
     {
       "title": "The logic",
-      "content": "In row A, digit 4 must go in column 2 or column 7. In row B, digit 4 must also go in column 2 or column 7. There are only two possible arrangements: either 4 goes in A2 and B7, or 4 goes in A7 and B2.",
+      "content": "In row 2, digit 4 must go in column 2 or column 7. In row 8, digit 4 must also go in column 2 or column 7. There are only two possible arrangements: either 4 goes in r2c2 and r8c7, or 4 goes in r2c7 and r8c2.",
+      "board": [5, 0, 8, 4, 9, 1, 0, 2, 6, 3, 0, 7, 8, 5, 2, 0, 9, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 9, 5, 1, 8, 0, 3, 7, 8, 0, 1, 7, 3, 9, 0, 5, 2],
       "highlightCells": [10, 15, 64, 69],
       "highlightDigits": [4]
     },
     {
       "title": "Either way, the columns are covered",
-      "content": "In both possible arrangements, columns 2 and 7 each have a 4 placed in them (from one of our two rows). This means no other cell in columns 2 or 7 can contain a 4."
+      "content": "In both possible arrangements, columns 2 and 7 each have a 4 placed in them (from one of our two rows). This means no other cell in columns 2 or 7 can contain a 4.",
+      "board": [5, 0, 8, 4, 9, 1, 0, 2, 6, 3, 0, 7, 8, 5, 2, 0, 9, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 9, 5, 1, 8, 0, 3, 7, 8, 0, 1, 7, 3, 9, 0, 5, 2],
+      "highlightCells": [10, 15, 64, 69],
+      "highlightDigits": [4]
     },
     {
       "title": "Eliminate from the columns",
       "content": "Remove the digit 4 from all other cells in columns 2 and 7 (excluding the four X-Wing cells). This can unblock cells that were stuck.",
+      "board": [5, 0, 8, 4, 9, 1, 0, 2, 6, 3, 0, 7, 8, 5, 2, 0, 9, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 9, 5, 1, 8, 0, 3, 7, 8, 0, 1, 7, 3, 9, 0, 5, 2],
       "highlightCells": [1, 19, 28, 37, 46, 55, 73, 6, 24, 33, 42, 51, 60, 78],
       "highlightDigits": [4]
     },
@@ -39,7 +45,7 @@
     },
     {
       "title": "Why it's called X-Wing",
-      "content": "If you draw lines connecting the four cells diagonally, they form an X shape — hence the name. X-Wings are rare but powerful, and they're the gateway to even more advanced fish patterns like Swordfish."
+      "content": "If you draw lines connecting the four cells diagonally, they form an X shape \u2014 hence the name. X-Wings are rare but powerful, and they're the gateway to even more advanced fish patterns like Swordfish."
     }
   ]
 }

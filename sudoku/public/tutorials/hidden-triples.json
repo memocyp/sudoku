@@ -13,13 +13,15 @@
     },
     {
       "title": "Find the hidden triple",
-      "content": "Look at this column. The digits 1, 6, and 9 only appear as candidates in three specific cells. No other cells in the column can contain these digits.",
+      "content": "Look at column 2 on the board. The digits 1, 6, and 9 only appear as candidates in three specific cells. The other empty cells in the column can't contain 1, 6, or 9 because those digits already appear in their rows.",
+      "board": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 6, 0, 9, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 1, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 1, 9, 0, 0],
       "highlightCells": [1, 19, 55],
       "highlightDigits": [1, 6, 9]
     },
     {
       "title": "The deduction",
-      "content": "Since 1, 6, and 9 can only go in these three cells, these cells must contain exactly 1, 6, and 9. Therefore, all other candidates in these cells can be safely removed.",
+      "content": "Since 1, 6, and 9 can only go in these three cells within the column, these cells must contain exactly 1, 6, and 9. Therefore, all other candidates in these cells can be safely removed.",
+      "board": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 6, 0, 9, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 1, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 1, 9, 0, 0],
       "highlightCells": [1, 19, 55],
       "highlightDigits": [1, 6, 9]
     },

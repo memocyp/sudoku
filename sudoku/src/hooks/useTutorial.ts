@@ -9,6 +9,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 export interface TutorialStep {
   title: string;
   content: string;
+  board?: number[];
   highlightCells?: number[];
   highlightDigits?: number[];
   action?: string;

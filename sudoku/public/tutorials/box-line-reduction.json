@@ -13,20 +13,23 @@
     },
     {
       "title": "Scan a row",
-      "content": "Look at this row. The digit 2 only appears as a candidate in cells that all fall within one 3×3 box. Nowhere else in the row can 2 go.",
+      "content": "Look at row 7. The right side is completely filled, but three cells on the left are empty. The digit 2 doesn't appear among the filled cells, so it must go somewhere in this row.",
+      "board": [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 8, 5, 7, 9, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       "highlightCells": [54, 55, 56, 57, 58, 59, 60, 61, 62],
       "highlightDigits": [2]
     },
     {
       "title": "Identify the box",
-      "content": "The candidates for 2 in this row are restricted to these cells, all within the same box. Since 2 must be in this row and these cells, 2 must be in this box in this row.",
+      "content": "Looking at where 2 can go in this row: the three empty cells are all in the bottom-left box. But column 3 already has a 2, so cell 56 is blocked. The digit 2 is restricted to just these two cells — both in the same box.",
+      "board": [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 8, 5, 7, 9, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       "highlightCells": [54, 55],
       "highlightDigits": [2]
     },
     {
       "title": "Eliminate within the box",
-      "content": "Now we can remove 2 from all other cells in that box that aren't in our row. The digit 2 is claimed by the row's intersection with the box.",
-      "highlightCells": [36, 37, 38, 45, 46, 47],
+      "content": "Since 2 must be in row 7 within this box, we can remove 2 from all other cells in the box that aren't in row 7. The digit 2 is claimed by the row's intersection with the box.",
+      "board": [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 8, 5, 7, 9, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "highlightCells": [63, 64, 65, 72, 73, 74],
       "highlightDigits": [2]
     },
     {

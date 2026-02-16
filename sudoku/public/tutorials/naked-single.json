@@ -9,27 +9,32 @@
     },
     {
       "title": "Look at the board",
-      "content": "Consider the highlighted cell. We need to figure out which digit goes here by looking at what's already placed in its row, column, and box.",
+      "content": "Consider the highlighted cell in the center. We need to figure out which digit goes here by looking at what's already placed in its row, column, and box.",
+      "board": [5, 0, 0, 0, 3, 0, 0, 0, 9, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 9, 2, 5, 0, 0, 0, 1, 2, 3, 4, 0, 6, 8, 9, 5, 0, 0, 0, 3, 1, 8, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 8, 0, 0, 0, 4, 0, 0, 0, 2],
       "highlightCells": [40]
     },
     {
       "title": "Check the row",
-      "content": "Look across the entire row. Every digit that already appears in this row is eliminated as a candidate for our target cell.",
+      "content": "Look across row 5. It contains 1, 2, 3, 4, 6, 8, 9, and 5 — that's eight of the nine digits. Only 7 is missing.",
+      "board": [5, 0, 0, 0, 3, 0, 0, 0, 9, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 9, 2, 5, 0, 0, 0, 1, 2, 3, 4, 0, 6, 8, 9, 5, 0, 0, 0, 3, 1, 8, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 8, 0, 0, 0, 4, 0, 0, 0, 2],
       "highlightCells": [36, 37, 38, 39, 40, 41, 42, 43, 44]
     },
     {
       "title": "Check the column",
-      "content": "Now look down the column. Any digit already in the column is also eliminated from our cell's candidates.",
+      "content": "Now look down the center column. It contains 3, 8, 6, 2, 1, 9, 5, and 4. Again, only 7 is missing.",
+      "board": [5, 0, 0, 0, 3, 0, 0, 0, 9, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 9, 2, 5, 0, 0, 0, 1, 2, 3, 4, 0, 6, 8, 9, 5, 0, 0, 0, 3, 1, 8, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 8, 0, 0, 0, 4, 0, 0, 0, 2],
       "highlightCells": [4, 13, 22, 31, 40, 49, 58, 67, 76]
     },
     {
       "title": "Check the box",
-      "content": "Finally, check the 3×3 box. Digits already placed in the box further reduce our candidates.",
+      "content": "The center 3×3 box contains 9, 2, 5, 4, 6, 3, 1, and 8. Once more, 7 is the only digit missing.",
+      "board": [5, 0, 0, 0, 3, 0, 0, 0, 9, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 9, 2, 5, 0, 0, 0, 1, 2, 3, 4, 0, 6, 8, 9, 5, 0, 0, 0, 3, 1, 8, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 8, 0, 0, 0, 4, 0, 0, 0, 2],
       "highlightCells": [30, 31, 32, 39, 40, 41, 48, 49, 50]
     },
     {
       "title": "Only one candidate remains",
-      "content": "After checking the row, column, and box, we've eliminated 8 of the 9 possible digits. Only one remains — that's our Naked Single! Place that digit in the cell.",
+      "content": "After checking the row, column, and box, we've eliminated 8 of the 9 possible digits. Only 7 remains — that's our Naked Single! Place 7 in the center cell.",
+      "board": [5, 0, 0, 0, 3, 0, 0, 0, 9, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 9, 2, 5, 0, 0, 0, 1, 2, 3, 4, 0, 6, 8, 9, 5, 0, 0, 0, 3, 1, 8, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 8, 0, 0, 0, 4, 0, 0, 0, 2],
       "highlightCells": [40],
       "highlightDigits": [7]
     },

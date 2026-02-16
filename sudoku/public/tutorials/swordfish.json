@@ -13,19 +13,23 @@
     },
     {
       "title": "Visualize the pattern",
-      "content": "In row A, digit 3 can only go in columns 1, 4, and 7. In row B, digit 3 can only go in columns 1 and 7. In row C, digit 3 can only go in columns 4 and 7. All cells fall within columns 1, 4, and 7.",
+      "content": "On the board, digit 3 is a candidate in row 1 at columns 1, 4, and 7. In row 4 at columns 1 and 7. In row 7 at columns 4 and 7. All positions fall within columns 1, 4, and 7 — forming a Swordfish.",
+      "board": [0, 5, 7, 0, 9, 1, 0, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 8, 5, 1, 9, 0, 7, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 9, 0, 1, 5, 0, 8, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       "highlightCells": [0, 3, 6, 27, 33, 57, 60],
       "highlightDigits": [3]
     },
     {
       "title": "The logic",
       "content": "Across these three rows, digit 3 must be placed once per row. All possible placements are within columns 1, 4, and 7. So exactly three of these cells will contain 3 — one per row and one per column.",
+      "board": [0, 5, 7, 0, 9, 1, 0, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 8, 5, 1, 9, 0, 7, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 9, 0, 1, 5, 0, 8, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "highlightCells": [0, 3, 6, 27, 33, 57, 60],
       "highlightDigits": [3]
     },
     {
       "title": "Eliminate from the columns",
       "content": "Since digit 3 is locked into columns 1, 4, and 7 by these three rows, we can remove 3 from all other cells in those columns (cells not part of the Swordfish pattern).",
-      "highlightCells": [9, 18, 36, 45, 54, 63, 72, 12, 21, 30, 39, 48, 66, 75, 15, 24, 42, 51, 69, 78],
+      "board": [0, 5, 7, 0, 9, 1, 0, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 8, 5, 1, 9, 0, 7, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 9, 0, 1, 5, 0, 8, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "highlightCells": [9, 18, 36, 45, 63, 72, 12, 21, 39, 48, 66, 75, 15, 24, 42, 51, 69, 78],
       "highlightDigits": [3]
     },
     {

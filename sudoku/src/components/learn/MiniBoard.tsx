@@ -24,7 +24,7 @@ export function MiniBoard({
 
   return (
     <div
-      className="grid grid-cols-9 w-full max-w-[16rem] aspect-square border-2 border-gray-800 dark:border-gray-300 rounded-sm mx-auto"
+      className="grid grid-cols-9 w-full max-w-xs aspect-square border-2 border-gray-800 dark:border-gray-300 rounded-sm mx-auto"
       role="img"
       aria-label="Sudoku tutorial board"
     >
@@ -59,7 +59,7 @@ export function MiniBoard({
         return (
           <div
             key={i}
-            className={`flex items-center justify-center aspect-square select-none text-[8px] sm:text-[10px] md:text-xs font-medium ${bg} ${borderClasses}`}
+            className={`flex items-center justify-center aspect-square select-none text-[10px] sm:text-xs md:text-sm font-medium ${bg} ${borderClasses}`}
           >
             {value !== 0 ? value : ''}
           </div>
