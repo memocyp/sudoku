@@ -305,10 +305,10 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   requestHint: async () => {
     const state = get();
-    const { board, hintsUsed } = state;
+    const { board, hintsUsed, difficulty, elapsedMs } = state;
 
     try {
-      const { getHint } = await import('@/engine/hint');
+      const { getHint, calculateHintPenalty } = await import('@/engine/hint');
       const result = getHint(board, 1);
 
       if (result) {
@@ -321,10 +321,13 @@ export const useGameStore = create<GameState>((set, get) => ({
           explanation: result.explanation,
         };
 
+        const penalty = calculateHintPenalty(1, difficulty);
+
         set({
           hintResult: hintDisplay,
           currentHintLevel: 1,
           hintsUsed: hintsUsed + 1,
+          elapsedMs: elapsedMs + penalty,
         });
       }
     } catch {
@@ -334,11 +337,11 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   requestMoreDetail: async () => {
     const state = get();
-    const { board, currentHintLevel } = state;
+    const { board, currentHintLevel, difficulty, elapsedMs } = state;
     if (currentHintLevel >= 4 || currentHintLevel === 0) return;
 
     try {
-      const { getHint } = await import('@/engine/hint');
+      const { getHint, calculateHintPenalty } = await import('@/engine/hint');
       const newLevel = currentHintLevel + 1;
       const result = getHint(board, newLevel);
 
@@ -352,9 +355,12 @@ export const useGameStore = create<GameState>((set, get) => ({
           explanation: result.explanation,
         };
 
+        const penalty = calculateHintPenalty(newLevel, difficulty);
+
         set({
           hintResult: hintDisplay,
           currentHintLevel: newLevel,
+          elapsedMs: elapsedMs + penalty,
         });
       }
     } catch {

@@ -1,16 +1,17 @@
 'use client';
 
-import { Suspense, useEffect, useCallback } from 'react';
+import { Suspense, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Pause, Play } from 'lucide-react';
 import { useGameStore } from '@/stores/gameStore';
 import { useKeyboard } from '@/hooks/useKeyboard';
 import type { Difficulty } from '@/engine/types';
-import { DIFFICULTY_DISPLAY } from '@/engine/types';
+import { DIFFICULTY_DISPLAY, DIFFICULTY_MAP } from '@/engine/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDuration } from '@/lib/scoring';
+import { useAuth } from '@/hooks/useAuth';
 
 // ---------------------------------------------------------------------------
 // Difficulty Selector (inline, for when no game is active)
@@ -90,7 +91,27 @@ function GameOverDialog() {
   const difficulty = useGameStore((s) => s.difficulty);
   const hintsUsed = useGameStore((s) => s.hintsUsed);
   const mistakesMade = useGameStore((s) => s.mistakesMade);
+  const puzzle = useGameStore((s) => s.puzzle);
   const newGame = useGameStore((s) => s.newGame);
+  const { user } = useAuth();
+  const submittedRef = useRef(false);
+
+  useEffect(() => {
+    if (!isComplete || !user || submittedRef.current) return;
+    submittedRef.current = true;
+
+    fetch('/api/stats', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        difficulty: DIFFICULTY_MAP[difficulty],
+        solveTimeMs: elapsedMs,
+        hintsUsed,
+        mistakesMade,
+        puzzleHash: puzzle.join(''),
+      }),
+    }).catch(() => {});
+  }, [isComplete, user, difficulty, elapsedMs, hintsUsed, mistakesMade, puzzle]);
 
   if (!isComplete) return null;
 
@@ -152,7 +173,7 @@ function HintOverlay() {
 
   return (
     <motion.div
-      className="absolute bottom-4 left-4 right-4 z-20"
+      className="w-full"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 } as const}
@@ -410,8 +431,10 @@ function PlayPageContent() {
             <SudokuBoard />
             <PauseOverlay />
             <GameOverDialog />
-            <HintOverlay />
           </div>
+
+          {/* Hint card (between board and toolbar) */}
+          <HintOverlay />
 
           {/* Toolbar */}
           <GameToolbar />

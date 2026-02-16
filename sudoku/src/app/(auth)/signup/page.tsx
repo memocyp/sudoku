@@ -39,7 +39,7 @@ export default function SignupPage() {
     if (result.error) {
       setError(result.error);
     } else {
-      router.push('/play');
+      router.push('/');
     }
   }
 
