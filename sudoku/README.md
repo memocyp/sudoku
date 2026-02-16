@@ -22,14 +22,16 @@ Play immediately without an account. Optionally sign up to persist stats and com
 - **Timer**: Auto-starts on new game, pause/resume support
 
 ### Hint System (Progressive Disclosure)
-| Level | Reveals | Time Penalty |
-|-------|---------|-------------|
-| 1 | Technique name ("Try Naked Pairs") | +30s |
-| 2 | + Region ("Look in row 3") | +30s |
-| 3 | + Highlighted cells | +60s |
-| 4 | + Full explanation with eliminations | +60s |
+Each hint request costs 1 of 5 hints per puzzle. Once a hint is shown, clicking **More Detail** reveals additional levels for free:
 
-Up to 5 hints per puzzle. Wrong digit placement adds a 15-second penalty.
+| Level | Reveals |
+|-------|---------|
+| 1 | Technique name ("Try looking for a Naked Single") |
+| 2 | + Region ("Look in row 3") |
+| 3 | + Specific cells ("Focus on cell R3C3") |
+| 4 | + Full explanation with eliminations |
+
+Hints auto-dismiss when you make a move. Wrong digit placement adds a 15-second penalty.
 
 ### Custom Sudoku Engine
 10 solving techniques ordered by difficulty:
@@ -305,7 +307,7 @@ In Vercel Dashboard → Your Project → Settings → Domains, add your custom d
 - [ ] **Unit tests** — Add Vitest for engine modules (techniques, solver, generator, grader)
 
 ### Medium Priority
-- [ ] **Interactive tutorial content** — Author JSON step definitions for each technique in `public/tutorials/`
+- [x] **Interactive tutorial content** — JSON step definitions authored for all 10 techniques in `public/tutorials/`
 - [ ] **MDX guides** — Write detailed technique guides with `<BoardDiagram>` and `<BeforeAfterDiagram>` custom MDX components
 - [ ] **Dark mode** — Wire `settingsStore.theme` to `ThemeProvider` with system preference detection
 - [ ] **Error boundaries** — Add React error boundaries around game board and page layouts

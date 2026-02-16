@@ -37,13 +37,13 @@ Pages (App Router)  →  Hooks  →  Zustand Stores  →  Engine (pure TS)
 - **utils.ts**: Precomputed lookup tables (`ROW_CELLS`, `COL_CELLS`, `BOX_CELLS`, `PEERS`) and bitmask helpers (`digitToBit`, `countBits`, `bitsToDigits`, `hasCandidate`, `removeCandidate`).
 - **techniques/**: 10 technique files, each exports `(board: Board, candidates: CandidateGrid) => TechniqueResult | null`. Ordered easiest→hardest: nakedSingle, hiddenSingle, nakedPairs, hiddenPairs, pointingPairs, boxLineReduction, nakedTriples, hiddenTriples, xWing, swordfish. Registry in `techniques/index.ts` exports `TECHNIQUES_ORDERED` and `TECHNIQUE_MAP`.
 - **solver.ts**: `solve(board)` applies techniques in order, returns `SolveStep[]`. `solveWithBacktracking(board)` uses MRV heuristic brute-force.
-- **generator.ts**: Two-phase: (1) fill 3 diagonal boxes + backtrack solve, (2) remove clues while maintaining unique solution and target difficulty. Up to 20 attempts.
+- **generator.ts**: Two-phase: (1) fill 3 diagonal boxes + backtrack solve, (2) remove clues while maintaining unique solution and target difficulty. Up to 20 attempts. Fallback path uses actual graded difficulty (not requested).
 - **grader.ts**: `gradePuzzleFromBoard(board)` → `{ difficulty, score, techniques }`. Score thresholds: 80→beginner, 250→easy, 500→medium, 900→hard.
-- **hint.ts**: `getHint(board, level)` returns progressive hints (level 1: technique name, level 2: +region, level 3: +cells, level 4: +full explanation). `MAX_HINTS_PER_PUZZLE = 5`.
+- **hint.ts**: `getHint(board, level)` returns progressive hints (level 1: technique name, level 2: +region, level 3: +cells, level 4: +full explanation). `MAX_HINTS_PER_PUZZLE = 5`. The store separates "request new hint" (`requestHint`, costs 1 hint) from "reveal more detail" (`requestMoreDetail`, free) via `currentHintLevel`.
 
 ## State Management
 
-**gameStore.ts** (Zustand): Central game state — `puzzle`, `solution`, `board`, `candidates`, `selectedCell`, `history[]`/`historyIndex` (undo/redo via full snapshots), timer, hints, mistakes. Actions use dynamic `import()` for engine modules.
+**gameStore.ts** (Zustand): Central game state — `puzzle`, `solution`, `board`, `candidates`, `selectedCell`, `history[]`/`historyIndex` (undo/redo via full snapshots), timer, hints (`hintResult`, `currentHintLevel`), mistakes. Actions use dynamic `import()` for engine modules. Hint state auto-clears on any board change (enterDigit, erase, undo, redo).
 
 **settingsStore.ts**: Display preferences (theme, highlightPeers, showCandidates, showErrors).
 
