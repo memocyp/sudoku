@@ -43,7 +43,7 @@ Pages (App Router)  →  Hooks  →  Zustand Stores  →  Engine (pure TS)
 
 ## State Management
 
-**gameStore.ts** (Zustand): Central game state — `puzzle`, `solution`, `board`, `candidates`, `selectedCell`, `history[]`/`historyIndex` (undo/redo via full snapshots), timer, hints (`hintResult`, `currentHintLevel`), mistakes. Actions use dynamic `import()` for engine modules. Hint state auto-clears on any board change (enterDigit, erase, undo, redo).
+**gameStore.ts** (Zustand): Central game state — `puzzle`, `solution`, `board`, `candidates`, `notes`, `selectedCell`, `history[]`/`historyIndex` (undo/redo via full snapshots), timer, hints (`hintResult`, `currentHintLevel`), mistakes. Actions use dynamic `import()` for engine modules. Hint state auto-clears on any board change (enterDigit, erase, undo, redo). `enterDigit` also auto-clears the placed digit from notes in all peer cells (same row/column/box) via `PEERS` lookup.
 
 **settingsStore.ts**: Display preferences (theme, highlightPeers, showCandidates, showErrors).
 
@@ -61,7 +61,16 @@ Both stores use immutable updates — boards/candidates are cloned via spread `[
 
 ## Supabase Integration
 
-Supabase clients in `src/lib/supabase/`. The app runs without Supabase credentials — `isSupabaseConfigured` guard in `client.ts` prevents crashes. `useAuth` hook short-circuits all operations when unconfigured. API routes are placeholders (TODO: wire to Supabase).
+Supabase clients in `src/lib/supabase/`. The app runs without Supabase credentials — `isSupabaseConfigured` guard in `client.ts` prevents crashes. `useAuth` hook short-circuits all operations when unconfigured.
+
+**API routes** are fully wired to Supabase:
+- `GET /api/stats` returns the user's `solve_times` records (requires auth).
+- `POST /api/stats` inserts a new solve time record.
+- `GET /api/leaderboard?difficulty={name}` returns ranked entries with profile display names.
+
+**Frontend pages** fetch from these API routes:
+- `/stats` fetches on mount, computes summary stats (totals, best/avg times, per-difficulty breakdown) from raw records. Shows "Sign in" prompt for unauthenticated users.
+- `/leaderboard` re-fetches whenever the active difficulty tab changes.
 
 ## Adding a New Technique
 

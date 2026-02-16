@@ -16,7 +16,7 @@ Play immediately without an account. Optionally sign up to persist stats and com
 ### Game
 - **5 difficulty levels**: Beginner (45–50 clues) → Expert (22–26 clues)
 - **Full keyboard support**: Arrow keys for navigation, 1–9 for digits, N for notes mode, Ctrl+Z/Y for undo/redo
-- **Notes mode**: Toggle candidate pencil marks on empty cells
+- **Notes mode**: Toggle candidate pencil marks on empty cells; auto-cleared from peer cells when a digit is placed
 - **Undo / Redo**: Full history with board snapshots
 - **Mistake detection**: Highlights incorrect digits against the known solution
 - **Timer**: Auto-starts on new game, pause/resume support
@@ -59,9 +59,9 @@ Puzzles are generated with a two-phase algorithm:
 - **Static guides** (`/guides/[slug]`): Reference pages with explanations
 
 ### Stats & Leaderboards
-- **Personal stats** (`/stats`): Games played, win count, best/average times, streaks, per-difficulty breakdown
-- **Global leaderboard** (`/leaderboard`): Filterable by difficulty with percentile rankings
-- **Anonymous-first**: Stats stored in localStorage until the user signs up, then migrated to Supabase
+- **Personal stats** (`/stats`): Games played, win count, best/average times, per-difficulty breakdown — fetched live from Supabase API
+- **Global leaderboard** (`/leaderboard`): Filterable by difficulty, fetched per tab from the API with ranked entries and player display names
+- **Anonymous-first**: Play without an account; sign in to persist stats and appear on leaderboards
 
 ### Authentication
 - Google and GitHub OAuth
@@ -301,7 +301,7 @@ In Vercel Dashboard → Your Project → Settings → Domains, add your custom d
 ## Roadmap / Next Steps
 
 ### High Priority
-- [ ] **Wire API routes to Supabase** — Replace placeholder `POST /api/stats` and `GET /api/leaderboard` with real Supabase queries
+- [x] **Wire API routes to Supabase** — Stats and leaderboard pages fetch live data from Supabase-backed API routes
 - [ ] **LocalStorage → Supabase migration** — Trigger `statsMigration.ts` on first login to migrate anonymous stats
 - [ ] **Percentile calculation** — Implement `pg_cron` or Supabase Edge Function to refresh `percentile_cache` every 15 minutes
 - [ ] **Unit tests** — Add Vitest for engine modules (techniques, solver, generator, grader)
