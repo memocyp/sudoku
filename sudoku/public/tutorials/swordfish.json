@@ -1,0 +1,44 @@
+{
+  "slug": "swordfish",
+  "title": "Swordfish",
+  "description": "An extension of X-Wing to three rows and three columns for powerful candidate elimination.",
+  "steps": [
+    {
+      "title": "What is a Swordfish?",
+      "content": "A Swordfish extends the X-Wing concept from two rows/columns to three. When a candidate digit appears in two or three cells in each of three rows, and all those cells fall within the same three columns, the digit can be eliminated from other cells in those columns."
+    },
+    {
+      "title": "From X-Wing to Swordfish",
+      "content": "An X-Wing uses 2 rows and 2 columns (4 cells in a rectangle). A Swordfish uses 3 rows and 3 columns (up to 9 cells, but often 6). The underlying logic is the same — it's just a bigger pattern."
+    },
+    {
+      "title": "Visualize the pattern",
+      "content": "In row A, digit 3 can only go in columns 1, 4, and 7. In row B, digit 3 can only go in columns 1 and 7. In row C, digit 3 can only go in columns 4 and 7. All cells fall within columns 1, 4, and 7.",
+      "highlightCells": [0, 3, 6, 27, 33, 57, 60],
+      "highlightDigits": [3]
+    },
+    {
+      "title": "The logic",
+      "content": "Across these three rows, digit 3 must be placed once per row. All possible placements are within columns 1, 4, and 7. So exactly three of these cells will contain 3 — one per row and one per column.",
+      "highlightDigits": [3]
+    },
+    {
+      "title": "Eliminate from the columns",
+      "content": "Since digit 3 is locked into columns 1, 4, and 7 by these three rows, we can remove 3 from all other cells in those columns (cells not part of the Swordfish pattern).",
+      "highlightCells": [9, 18, 36, 45, 54, 63, 72, 12, 21, 30, 39, 48, 66, 75, 15, 24, 42, 51, 69, 78],
+      "highlightDigits": [3]
+    },
+    {
+      "title": "Not all cells need candidates",
+      "content": "A Swordfish doesn't require the digit to be a candidate in all 9 possible cells (3 rows × 3 columns). It only requires that each row's candidates for the digit fall entirely within the three columns. Some cells at the intersections may already be filled."
+    },
+    {
+      "title": "Column-based Swordfish",
+      "content": "You can also build a Swordfish starting from columns. If a digit in three columns is restricted to the same three rows, eliminate that digit from other cells in those rows."
+    },
+    {
+      "title": "Finding Swordfish in practice",
+      "content": "Swordfish patterns are rare and difficult to spot. For each digit, list which columns contain candidates in each row. If three rows have their candidates restricted to the same three columns, you have a Swordfish. This is an expert-level technique — use it when simpler methods are exhausted."
+    }
+  ]
+}

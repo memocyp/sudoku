@@ -1,0 +1,45 @@
+{
+  "slug": "hidden-single",
+  "title": "Hidden Single",
+  "description": "When a digit can only go in one cell within a row, column, or box, it must go there.",
+  "steps": [
+    {
+      "title": "What is a Hidden Single?",
+      "content": "A Hidden Single occurs when a particular digit can only be placed in one cell within a row, column, or box. Even though that cell may have multiple candidates, the digit is 'hidden' among them — but it's the only place it can go in that house."
+    },
+    {
+      "title": "Naked vs. Hidden",
+      "content": "With a Naked Single, the cell itself has only one candidate. With a Hidden Single, you focus on a specific digit and find that it can only go in one cell within a house (row, column, or box)."
+    },
+    {
+      "title": "Scan a box for a digit",
+      "content": "Let's look at this 3×3 box. We want to place the digit 5 somewhere in this box. Let's check which cells are available.",
+      "highlightCells": [27, 28, 29, 36, 37, 38, 45, 46, 47],
+      "highlightDigits": [5]
+    },
+    {
+      "title": "Eliminate cells",
+      "content": "Some cells already have digits. Others are blocked because 5 already appears in their row or column. After elimination, only one cell in the box can hold the digit 5.",
+      "highlightCells": [37],
+      "highlightDigits": [5]
+    },
+    {
+      "title": "Place the digit",
+      "content": "Since 5 can only go in one cell within this box, it must go there — even if the cell has other candidates too. That's what makes it 'hidden': the cell might look like it has multiple options, but for this specific digit, there's no other choice.",
+      "highlightCells": [37],
+      "highlightDigits": [5]
+    },
+    {
+      "title": "Hidden Singles in rows and columns",
+      "content": "The same logic applies to rows and columns. Scan across a row: if a digit can only go in one cell of that row, place it there. Same for columns."
+    },
+    {
+      "title": "Strategy for finding Hidden Singles",
+      "content": "A good approach is to pick a digit (say 1) and scan all 9 boxes, then all 9 rows, then all 9 columns. For each house, ask: 'Where can this digit go?' If the answer is only one cell, you've found a Hidden Single."
+    },
+    {
+      "title": "Practice tip",
+      "content": "Hidden Singles are the most commonly used technique. Most beginner and easy puzzles can be solved entirely with Naked and Hidden Singles. Master these two before moving on to more advanced techniques."
+    }
+  ]
+}

@@ -45,7 +45,7 @@ export interface UseTutorialReturn {
 export function useTutorial(slug: string | null): UseTutorialReturn {
   const [data, setData] = useState<TutorialData | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(!!slug);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch tutorial JSON when slug changes

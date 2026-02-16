@@ -1,0 +1,43 @@
+{
+  "slug": "hidden-pairs",
+  "title": "Hidden Pairs",
+  "description": "When two digits only appear as candidates in two cells of a house, all other candidates can be removed from those cells.",
+  "steps": [
+    {
+      "title": "What are Hidden Pairs?",
+      "content": "A Hidden Pair occurs when two digits appear as candidates in exactly the same two cells within a house, and nowhere else in that house. Even though those cells may have other candidates, the pair is 'hidden' among them."
+    },
+    {
+      "title": "Naked vs. Hidden Pairs",
+      "content": "In a Naked Pair, the two cells contain only the pair digits. In a Hidden Pair, the cells may have additional candidates — but the two key digits only appear in those two cells within the house."
+    },
+    {
+      "title": "Find the hidden pair",
+      "content": "Look at this box. The digits 4 and 8 only appear as candidates in two specific cells. Other cells in the box cannot contain 4 or 8.",
+      "highlightCells": [30, 32],
+      "highlightDigits": [4, 8]
+    },
+    {
+      "title": "The deduction",
+      "content": "Since 4 and 8 can only go in these two cells, those two cells must contain 4 and 8. This means all other candidates in those two cells can be safely removed.",
+      "highlightCells": [30, 32],
+      "highlightDigits": [4, 8]
+    },
+    {
+      "title": "Clean up the candidates",
+      "content": "Remove every candidate except 4 and 8 from the two highlighted cells. This effectively turns the Hidden Pair into a Naked Pair, which may trigger further eliminations in intersecting rows and columns."
+    },
+    {
+      "title": "Searching for Hidden Pairs",
+      "content": "For each house, count how many cells contain each digit as a candidate. If two digits each appear in exactly the same two cells (and only those cells), you have a Hidden Pair."
+    },
+    {
+      "title": "Why they're harder to spot",
+      "content": "Hidden Pairs are trickier than Naked Pairs because the key digits are buried among other candidates. The cells might have 3, 4, or even 5 candidates — you need to focus on where specific digits can go, not on the total candidate count."
+    },
+    {
+      "title": "Practice tip",
+      "content": "When scanning for Hidden Pairs, pick two digits and check if they share the same two cells in any house. Systematic scanning digit-by-digit is slower but more reliable than trying to spot patterns visually."
+    }
+  ]
+}

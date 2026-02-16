@@ -1,0 +1,45 @@
+{
+  "slug": "x-wing",
+  "title": "X-Wing",
+  "description": "When a candidate appears in exactly two cells in each of two rows (same columns), it can be eliminated from other cells in those columns.",
+  "steps": [
+    {
+      "title": "What is an X-Wing?",
+      "content": "An X-Wing is a pattern where a candidate digit appears in exactly two cells in each of two different rows, and these cells align on the same two columns. The four cells form a rectangle, and the digit can be eliminated from other cells in those two columns."
+    },
+    {
+      "title": "Visualize the rectangle",
+      "content": "Imagine four cells at the corners of a rectangle. In row A, digit 4 can only go in columns 2 and 7. In row B, digit 4 can also only go in columns 2 and 7. These four cells form an X-Wing.",
+      "highlightCells": [10, 15, 64, 69],
+      "highlightDigits": [4]
+    },
+    {
+      "title": "The logic",
+      "content": "In row A, digit 4 must go in column 2 or column 7. In row B, digit 4 must also go in column 2 or column 7. There are only two possible arrangements: either 4 goes in A2 and B7, or 4 goes in A7 and B2.",
+      "highlightCells": [10, 15, 64, 69],
+      "highlightDigits": [4]
+    },
+    {
+      "title": "Either way, the columns are covered",
+      "content": "In both possible arrangements, columns 2 and 7 each have a 4 placed in them (from one of our two rows). This means no other cell in columns 2 or 7 can contain a 4."
+    },
+    {
+      "title": "Eliminate from the columns",
+      "content": "Remove the digit 4 from all other cells in columns 2 and 7 (excluding the four X-Wing cells). This can unblock cells that were stuck.",
+      "highlightCells": [1, 19, 28, 37, 46, 55, 73, 6, 24, 33, 42, 51, 60, 78],
+      "highlightDigits": [4]
+    },
+    {
+      "title": "X-Wing on columns",
+      "content": "The same pattern works with columns instead of rows. If a digit appears in exactly two cells in each of two columns, and those cells share the same two rows, eliminate that digit from other cells in those rows."
+    },
+    {
+      "title": "How to find X-Wings",
+      "content": "For each digit, check every row. If a digit has exactly two candidate cells in a row, note the column positions. If another row has the same digit restricted to the same two columns, you've found an X-Wing."
+    },
+    {
+      "title": "Why it's called X-Wing",
+      "content": "If you draw lines connecting the four cells diagonally, they form an X shape — hence the name. X-Wings are rare but powerful, and they're the gateway to even more advanced fish patterns like Swordfish."
+    }
+  ]
+}

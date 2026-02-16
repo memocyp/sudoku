@@ -1,0 +1,43 @@
+{
+  "slug": "hidden-triples",
+  "title": "Hidden Triples",
+  "description": "When three digits only appear in three cells of a house, all other candidates can be removed from those cells.",
+  "steps": [
+    {
+      "title": "What are Hidden Triples?",
+      "content": "A Hidden Triple occurs when three digits are candidates in exactly the same three cells within a house, and those digits don't appear as candidates in any other cells of that house. All other candidates can be removed from those three cells."
+    },
+    {
+      "title": "Hidden vs. Naked Triples",
+      "content": "In a Naked Triple, the three cells contain only the triple's digits. In a Hidden Triple, the cells may have additional candidates — but the three key digits are restricted to just those three cells. The extra candidates are what makes them 'hidden'."
+    },
+    {
+      "title": "Find the hidden triple",
+      "content": "Look at this column. The digits 1, 6, and 9 only appear as candidates in three specific cells. No other cells in the column can contain these digits.",
+      "highlightCells": [1, 19, 55],
+      "highlightDigits": [1, 6, 9]
+    },
+    {
+      "title": "The deduction",
+      "content": "Since 1, 6, and 9 can only go in these three cells, these cells must contain exactly 1, 6, and 9. Therefore, all other candidates in these cells can be safely removed.",
+      "highlightCells": [1, 19, 55],
+      "highlightDigits": [1, 6, 9]
+    },
+    {
+      "title": "Clean up candidates",
+      "content": "Remove every candidate except 1, 6, and 9 from the three cells. This simplifies the cells and may reveal Naked Singles or enable further techniques in intersecting houses."
+    },
+    {
+      "title": "Searching systematically",
+      "content": "For each house, tally which cells contain each digit. Group digits that share the same set of cells. If three digits all appear in only three cells, you have a Hidden Triple."
+    },
+    {
+      "title": "Why they're hard to find",
+      "content": "Hidden Triples are among the harder techniques to spot manually because you need to track where specific digits can go across a house while ignoring the 'noise' of other candidates. Practice and pencil marks are essential."
+    },
+    {
+      "title": "When to use this technique",
+      "content": "Hidden Triples typically appear in hard-level puzzles. If you've exhausted Naked/Hidden Singles, pairs, and pointing pairs without progress, start looking for Hidden Triples."
+    }
+  ]
+}

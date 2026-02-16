@@ -1,0 +1,45 @@
+{
+  "slug": "naked-single",
+  "title": "Naked Single",
+  "description": "When a cell has only one possible candidate remaining, that digit must go in that cell.",
+  "steps": [
+    {
+      "title": "What is a Naked Single?",
+      "content": "A Naked Single occurs when a cell has only one possible digit that can go in it. After eliminating all digits that already appear in the same row, column, and box, only one candidate remains."
+    },
+    {
+      "title": "Look at the board",
+      "content": "Consider the highlighted cell. We need to figure out which digit goes here by looking at what's already placed in its row, column, and box.",
+      "highlightCells": [40]
+    },
+    {
+      "title": "Check the row",
+      "content": "Look across the entire row. Every digit that already appears in this row is eliminated as a candidate for our target cell.",
+      "highlightCells": [36, 37, 38, 39, 40, 41, 42, 43, 44]
+    },
+    {
+      "title": "Check the column",
+      "content": "Now look down the column. Any digit already in the column is also eliminated from our cell's candidates.",
+      "highlightCells": [4, 13, 22, 31, 40, 49, 58, 67, 76]
+    },
+    {
+      "title": "Check the box",
+      "content": "Finally, check the 3×3 box. Digits already placed in the box further reduce our candidates.",
+      "highlightCells": [30, 31, 32, 39, 40, 41, 48, 49, 50]
+    },
+    {
+      "title": "Only one candidate remains",
+      "content": "After checking the row, column, and box, we've eliminated 8 of the 9 possible digits. Only one remains — that's our Naked Single! Place that digit in the cell.",
+      "highlightCells": [40],
+      "highlightDigits": [7]
+    },
+    {
+      "title": "Why it works",
+      "content": "Since every cell must contain exactly one digit (1–9) and no digit can repeat in any row, column, or box, when only one option is left, it must be the answer. This is the most fundamental Sudoku technique."
+    },
+    {
+      "title": "Tips for spotting Naked Singles",
+      "content": "Naked Singles are easiest to find in cells surrounded by many filled cells. Look for rows, columns, or boxes that are nearly complete — the empty cells there are the most likely candidates for Naked Singles."
+    }
+  ]
+}

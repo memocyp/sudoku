@@ -1,0 +1,43 @@
+{
+  "slug": "naked-pairs",
+  "title": "Naked Pairs",
+  "description": "When two cells in a house share the same two candidates, those digits can be eliminated from other cells in that house.",
+  "steps": [
+    {
+      "title": "What are Naked Pairs?",
+      "content": "A Naked Pair occurs when two cells in the same house (row, column, or box) each contain exactly the same two candidates and no others. Because those two digits must go in those two cells, they can be eliminated from all other cells in that house."
+    },
+    {
+      "title": "Spot the pair",
+      "content": "Look at this row. Two cells both contain only the candidates {3, 7}. No other digits are possible in either cell.",
+      "highlightCells": [18, 24],
+      "highlightDigits": [3, 7]
+    },
+    {
+      "title": "Why does this work?",
+      "content": "One of these cells must be 3 and the other must be 7 (or vice versa). We don't know which is which yet, but we know for certain that 3 and 7 are 'claimed' by this pair."
+    },
+    {
+      "title": "Eliminate from peers",
+      "content": "Since 3 and 7 are locked into those two cells, we can safely remove 3 and 7 as candidates from every other cell in the same row. This often reveals new Naked or Hidden Singles.",
+      "highlightCells": [19, 20, 21, 22, 23, 25, 26],
+      "highlightDigits": [3, 7]
+    },
+    {
+      "title": "Naked Pairs in boxes",
+      "content": "Naked Pairs also work within a 3×3 box. If two cells in a box both have exactly {2, 9}, then 2 and 9 can be removed from the other 7 cells in that box."
+    },
+    {
+      "title": "Naked Pairs in columns",
+      "content": "The same logic applies to columns. Two cells in the same column with identical two-candidate sets let you eliminate those digits from other cells in the column."
+    },
+    {
+      "title": "How to spot them",
+      "content": "Enable pencil marks (notes mode) and look for cells with exactly two candidates. When you see two cells in the same house with the same pair, you've found a Naked Pair. The smaller the candidate lists, the easier they are to spot."
+    },
+    {
+      "title": "Key takeaway",
+      "content": "Naked Pairs don't directly place digits — they eliminate candidates. But those eliminations often create Naked Singles or Hidden Singles that let you place digits. Elimination techniques are the foundation of intermediate Sudoku solving."
+    }
+  ]
+}

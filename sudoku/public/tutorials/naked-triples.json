@@ -1,0 +1,45 @@
+{
+  "slug": "naked-triples",
+  "title": "Naked Triples",
+  "description": "When three cells in a house have candidates that are a subset of three digits, those digits can be eliminated from other cells.",
+  "steps": [
+    {
+      "title": "What are Naked Triples?",
+      "content": "A Naked Triple occurs when three cells in a house have candidates that are all subsets of the same three digits. The three cells together 'claim' those three digits, allowing elimination from other cells in the house."
+    },
+    {
+      "title": "Not all three cells need all three digits",
+      "content": "Unlike Naked Pairs where both cells have exactly the same candidates, in a Naked Triple, each cell may have two or three of the triple's digits. For example, cells with {1,3}, {1,9}, and {3,9} form a Naked Triple for digits {1,3,9}."
+    },
+    {
+      "title": "Spot the triple",
+      "content": "Look at this row. Three cells have candidates drawn entirely from the set {2, 5, 8}. One cell has {2,5}, another has {5,8}, and the third has {2,8}.",
+      "highlightCells": [0, 3, 7],
+      "highlightDigits": [2, 5, 8]
+    },
+    {
+      "title": "The logic",
+      "content": "These three cells must contain 2, 5, and 8 in some order. We don't know the exact arrangement, but we know those three digits are locked into those three cells.",
+      "highlightCells": [0, 3, 7],
+      "highlightDigits": [2, 5, 8]
+    },
+    {
+      "title": "Eliminate from other cells",
+      "content": "Since 2, 5, and 8 are claimed by the triple, remove these digits as candidates from all other cells in the same row. This can cascade into further simplifications.",
+      "highlightCells": [1, 2, 4, 5, 6, 8],
+      "highlightDigits": [2, 5, 8]
+    },
+    {
+      "title": "Works in boxes and columns too",
+      "content": "Just like pairs, Naked Triples apply to boxes and columns, not just rows. Check all three types of houses when searching."
+    },
+    {
+      "title": "Finding Naked Triples",
+      "content": "Look for cells with 2 or 3 candidates. If you can find three cells whose combined candidate set contains exactly three digits, you have a Naked Triple. Pencil marks make this much easier to spot."
+    },
+    {
+      "title": "Relationship to Naked Pairs",
+      "content": "Naked Triples extend the same logic as Naked Pairs to three cells and three digits. The pattern generalizes further to Naked Quads (four cells, four digits), though those are rare in practice."
+    }
+  ]
+}

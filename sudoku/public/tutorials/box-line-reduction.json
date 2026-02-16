@@ -1,0 +1,45 @@
+{
+  "slug": "box-line-reduction",
+  "title": "Box/Line Reduction",
+  "description": "When a candidate in a row or column is confined to a single box, it can be eliminated from other cells in that box.",
+  "steps": [
+    {
+      "title": "What is Box/Line Reduction?",
+      "content": "Box/Line Reduction is the reverse of Pointing Pairs. When all candidates for a digit in a row (or column) fall within a single box, that digit can be eliminated from other cells in that box (outside the row/column)."
+    },
+    {
+      "title": "The reverse of Pointing Pairs",
+      "content": "With Pointing Pairs, you look inside a box and eliminate along a line. With Box/Line Reduction, you look along a line and eliminate inside a box. They're complementary techniques."
+    },
+    {
+      "title": "Scan a row",
+      "content": "Look at this row. The digit 2 only appears as a candidate in cells that all fall within one 3×3 box. Nowhere else in the row can 2 go.",
+      "highlightCells": [54, 55, 56, 57, 58, 59, 60, 61, 62],
+      "highlightDigits": [2]
+    },
+    {
+      "title": "Identify the box",
+      "content": "The candidates for 2 in this row are restricted to these cells, all within the same box. Since 2 must be in this row and these cells, 2 must be in this box in this row.",
+      "highlightCells": [54, 55],
+      "highlightDigits": [2]
+    },
+    {
+      "title": "Eliminate within the box",
+      "content": "Now we can remove 2 from all other cells in that box that aren't in our row. The digit 2 is claimed by the row's intersection with the box.",
+      "highlightCells": [36, 37, 38, 45, 46, 47],
+      "highlightDigits": [2]
+    },
+    {
+      "title": "Column version",
+      "content": "The same logic works for columns. If a digit in a column only appears within one box, eliminate that digit from other cells in the box that aren't in the column."
+    },
+    {
+      "title": "Searching strategy",
+      "content": "For each row (or column), check each digit. If all candidates for that digit fall within a single box, check the rest of that box for eliminations. This technique pairs well with Pointing Pairs — always check both directions."
+    },
+    {
+      "title": "Why it matters",
+      "content": "Box/Line Reduction and Pointing Pairs together form a powerful toolkit for intermediate puzzles. They exploit the interaction between rows/columns and boxes, opening up cells that basic techniques miss."
+    }
+  ]
+}

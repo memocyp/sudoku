@@ -1,0 +1,45 @@
+{
+  "slug": "pointing-pairs",
+  "title": "Pointing Pairs",
+  "description": "When a candidate within a box is restricted to a single row or column, it can be eliminated elsewhere in that line.",
+  "steps": [
+    {
+      "title": "What are Pointing Pairs?",
+      "content": "A Pointing Pair (or Pointing Triple) occurs when all candidates for a particular digit within a box are confined to a single row or column. Since the digit must go somewhere in that box, and all options are in one line, the digit can be eliminated from that line outside the box."
+    },
+    {
+      "title": "Look inside a box",
+      "content": "Consider this 3×3 box. The digit 6 only appears as a candidate in cells along one row within the box. It cannot go anywhere else in this box.",
+      "highlightCells": [27, 28, 29, 36, 37, 38, 45, 46, 47],
+      "highlightDigits": [6]
+    },
+    {
+      "title": "The candidates point along a row",
+      "content": "The candidate 6 only appears in two cells, and both are in the same row. These candidates 'point' along the row, telling us something about cells outside the box.",
+      "highlightCells": [27, 29],
+      "highlightDigits": [6]
+    },
+    {
+      "title": "Eliminate along the row",
+      "content": "Since 6 must go in one of these two cells (both in this row, both in this box), 6 cannot appear elsewhere in this row. Remove 6 as a candidate from all other cells in the row that are outside the box.",
+      "highlightCells": [30, 31, 32, 33, 34, 35],
+      "highlightDigits": [6]
+    },
+    {
+      "title": "Pointing along columns",
+      "content": "The same logic works for columns. If a digit's candidates within a box all fall in one column, eliminate that digit from the rest of the column outside the box."
+    },
+    {
+      "title": "Pointing Triples",
+      "content": "If the candidate appears in three cells within the box (all in the same row or column), it's called a Pointing Triple. The elimination logic is identical — remove the digit from the rest of that line."
+    },
+    {
+      "title": "How to search systematically",
+      "content": "For each box, check each digit 1–9. Count which cells in the box have that digit as a candidate. If all of them are in one row (or column), you have a Pointing Pair/Triple. Then check if there's anything to eliminate in the rest of that line."
+    },
+    {
+      "title": "Key insight",
+      "content": "Pointing Pairs link box logic with line logic. They're one of the most common intermediate techniques and often unlock cells that single-based techniques can't reach."
+    }
+  ]
+}
