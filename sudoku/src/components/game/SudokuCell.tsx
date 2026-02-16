@@ -13,6 +13,7 @@ interface SudokuCellProps {
   isError: boolean;
   candidates: number;
   showCandidates: boolean;
+  notes: number;
 }
 
 function getCellBackground(
@@ -56,6 +57,7 @@ function SudokuCellInner({
   isError,
   candidates,
   showCandidates,
+  notes,
 }: SudokuCellProps) {
   const row = Math.floor(index / 9);
   const col = index % 9;
@@ -93,6 +95,17 @@ function SudokuCellInner({
           >
             {value}
           </motion.span>
+        ) : notes !== 0 ? (
+          <motion.div
+            key="notes"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
+            className="absolute inset-0"
+          >
+            <CandidateGrid candidates={notes} />
+          </motion.div>
         ) : showCandidates && candidates !== 0 ? (
           <motion.div
             key="candidates"

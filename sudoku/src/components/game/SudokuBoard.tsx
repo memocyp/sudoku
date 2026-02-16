@@ -12,6 +12,7 @@ export function SudokuBoard() {
   const solution = useGameStore((s) => s.solution);
   const selectedCell = useGameStore((s) => s.selectedCell);
   const candidates = useGameStore((s) => s.candidates);
+  const notes = useGameStore((s) => s.notes);
   const selectCell = useGameStore((s) => s.selectCell);
 
   const highlightPeers = useSettingsStore((s) => s.highlightPeers);
@@ -81,6 +82,7 @@ export function SudokuBoard() {
             isError={isError}
             candidates={candidates[i]}
             showCandidates={showCandidates}
+            notes={notes[i]}
           />
         );
       })}

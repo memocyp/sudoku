@@ -86,3 +86,4 @@ Supabase clients in `src/lib/supabase/`. The app runs without Supabase credentia
 - Engine functions are pure — no React, no side effects, no dynamic imports.
 - `utils.ts` has legacy aliases (`rowOf` → `getRow`, etc.) for backward compatibility.
 - Components in `src/components/game/` read from stores via hooks; UI components in `src/components/ui/` are shadcn/ui primitives.
+- The play page uses the shared `SudokuBoard`/`SudokuCell` components (not an inline board). `SudokuCell` accepts a `notes` bitmask prop — user pencil marks display in priority over engine candidates. This gives the play page error highlighting, peer highlighting, same-digit highlighting, and animations for free.
