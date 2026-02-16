@@ -1,16 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Medal } from 'lucide-react';
+import { Trophy, Medal, Loader2 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { Difficulty } from '@/engine/types';
 import { DIFFICULTY_DISPLAY } from '@/engine/types';
+import { formatDuration } from '@/lib/scoring';
 
 // ---------------------------------------------------------------------------
-// Placeholder leaderboard data
+// Types
 // ---------------------------------------------------------------------------
 
 interface LeaderboardEntry {
@@ -20,16 +21,16 @@ interface LeaderboardEntry {
   date: string;
 }
 
-const DIFFICULTIES: Difficulty[] = ['beginner', 'easy', 'medium', 'hard', 'expert'];
+interface ApiEntry {
+  rank: number;
+  displayName: string;
+  solveTimeMs: number;
+  hintsUsed: number;
+  mistakesMade: number;
+  createdAt: string;
+}
 
-// Empty placeholder data for each difficulty
-const PLACEHOLDER_DATA: Record<Difficulty, LeaderboardEntry[]> = {
-  beginner: [],
-  easy: [],
-  medium: [],
-  hard: [],
-  expert: [],
-};
+const DIFFICULTIES: Difficulty[] = ['beginner', 'easy', 'medium', 'hard', 'expert'];
 
 // ---------------------------------------------------------------------------
 // Animation variants
@@ -63,12 +64,64 @@ function RankDisplay({ rank }: { rank: number }) {
   return <span className="text-sm font-medium text-muted-foreground w-5 text-center">{rank}</span>;
 }
 
+function formatDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  } catch {
+    return iso;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 
 export default function LeaderboardPage() {
   const [activeDifficulty, setActiveDifficulty] = useState<Difficulty>('medium');
+  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+
+    async function fetchLeaderboard() {
+      try {
+        const res = await fetch(`/api/leaderboard?difficulty=${activeDifficulty}`);
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || `Failed to fetch leaderboard (${res.status})`);
+        }
+        const data = (await res.json()) as { entries: ApiEntry[]; total: number };
+        if (!cancelled) {
+          setEntries(
+            (data.entries ?? []).map((e) => ({
+              rank: e.rank,
+              username: e.displayName,
+              solveTime: formatDuration(e.solveTimeMs),
+              date: formatDate(e.createdAt),
+            })),
+          );
+          setTotal(data.total ?? 0);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : 'Failed to load leaderboard');
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    fetchLeaderboard();
+    return () => { cancelled = true; };
+  }, [activeDifficulty]);
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -112,12 +165,20 @@ export default function LeaderboardPage() {
                   <Trophy className="size-5" />
                   {DIFFICULTY_DISPLAY[d]} Leaderboard
                   <Badge variant="outline" className="ml-auto">
-                    {PLACEHOLDER_DATA[d].length} entries
+                    {d === activeDifficulty ? total : 0} entries
                   </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {PLACEHOLDER_DATA[d].length === 0 ? (
+                {d === activeDifficulty && loading ? (
+                  <div className="flex justify-center py-12">
+                    <Loader2 className="size-8 animate-spin text-muted-foreground" />
+                  </div>
+                ) : d === activeDifficulty && error ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <p className="text-sm">Failed to load leaderboard: {error}</p>
+                  </div>
+                ) : d === activeDifficulty && entries.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground">
                     <Trophy className="size-12 mx-auto mb-4 opacity-30" />
                     <p className="text-sm">No entries yet.</p>
@@ -125,7 +186,7 @@ export default function LeaderboardPage() {
                       Be the first to complete a {DIFFICULTY_DISPLAY[d].toLowerCase()} puzzle!
                     </p>
                   </div>
-                ) : (
+                ) : d === activeDifficulty ? (
                   <motion.div
                     className="space-y-2"
                     variants={containerVariants}
@@ -141,7 +202,7 @@ export default function LeaderboardPage() {
                     </div>
 
                     {/* Entries */}
-                    {PLACEHOLDER_DATA[d].map((entry) => (
+                    {entries.map((entry) => (
                       <motion.div
                         key={entry.rank}
                         variants={itemVariants}
@@ -156,7 +217,7 @@ export default function LeaderboardPage() {
                       </motion.div>
                     ))}
                   </motion.div>
-                )}
+                ) : null}
               </CardContent>
             </Card>
           </TabsContent>

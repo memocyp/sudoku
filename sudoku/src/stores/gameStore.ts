@@ -191,9 +191,13 @@ export const useGameStore = create<GameState>((set, get) => ({
     const newBoard = cloneBoard(board);
     newBoard[selectedCell] = digit;
 
-    // Clear notes for the cell that was just filled
+    // Clear notes for the cell that was just filled and remove the digit from peer notes
     const newNotes = cloneCandidates(notes);
     newNotes[selectedCell] = 0;
+    const { PEERS } = await import('@/engine/utils');
+    for (const peer of PEERS[selectedCell]) {
+      newNotes[peer] &= ~digitToBit(digit);
+    }
 
     // Check for mistake
     let newMistakes = state.mistakesMade;

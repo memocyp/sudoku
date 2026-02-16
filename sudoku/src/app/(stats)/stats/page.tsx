@@ -1,49 +1,91 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { BarChart3, Clock, Trophy, Target, TrendingUp } from 'lucide-react';
+import { BarChart3, Clock, Trophy, Target, TrendingUp, Loader2, LogIn } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { Difficulty } from '@/engine/types';
-import { DIFFICULTY_DISPLAY } from '@/engine/types';
+import { DIFFICULTY_DISPLAY, DIFFICULTY_MAP } from '@/engine/types';
+import { formatDuration } from '@/lib/scoring';
+import { useAuth } from '@/hooks/useAuth';
+import Link from 'next/link';
 
 // ---------------------------------------------------------------------------
-// Placeholder stats (will be replaced by Supabase or local storage data)
+// Types
 // ---------------------------------------------------------------------------
+
+interface StatRecord {
+  id: string;
+  difficulty: number;
+  solve_time_ms: number;
+  hints_used: number;
+  mistakes_made: number;
+  puzzle_hash: string | null;
+  created_at: string;
+}
 
 interface StatsSummary {
   totalGames: number;
   totalWins: number;
-  totalTime: string;
   averageTime: string;
   bestTime: string;
-  currentStreak: number;
-  longestStreak: number;
   byDifficulty: {
     difficulty: Difficulty;
     games: number;
-    wins: number;
     bestTime: string;
     avgTime: string;
   }[];
 }
 
-const PLACEHOLDER_STATS: StatsSummary = {
-  totalGames: 0,
-  totalWins: 0,
-  totalTime: '0s',
-  averageTime: '--',
-  bestTime: '--',
-  currentStreak: 0,
-  longestStreak: 0,
-  byDifficulty: [
-    { difficulty: 'beginner', games: 0, wins: 0, bestTime: '--', avgTime: '--' },
-    { difficulty: 'easy', games: 0, wins: 0, bestTime: '--', avgTime: '--' },
-    { difficulty: 'medium', games: 0, wins: 0, bestTime: '--', avgTime: '--' },
-    { difficulty: 'hard', games: 0, wins: 0, bestTime: '--', avgTime: '--' },
-    { difficulty: 'expert', games: 0, wins: 0, bestTime: '--', avgTime: '--' },
-  ],
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const LEVEL_TO_DIFFICULTY: Record<number, Difficulty> = {
+  1: 'beginner',
+  2: 'easy',
+  3: 'medium',
+  4: 'hard',
+  5: 'expert',
 };
+
+function computeStats(records: StatRecord[]): StatsSummary {
+  const totalGames = records.length;
+  const totalWins = totalGames; // all records are completions
+
+  let bestTime = '--';
+  let averageTime = '--';
+
+  if (totalGames > 0) {
+    const times = records.map((r) => r.solve_time_ms);
+    const minTime = Math.min(...times);
+    const avgTime = times.reduce((a, b) => a + b, 0) / times.length;
+    bestTime = formatDuration(minTime);
+    averageTime = formatDuration(avgTime);
+  }
+
+  // Group by difficulty
+  const ALL_DIFFICULTIES: Difficulty[] = ['beginner', 'easy', 'medium', 'hard', 'expert'];
+  const byDifficulty = ALL_DIFFICULTIES.map((diff) => {
+    const level = DIFFICULTY_MAP[diff];
+    const group = records.filter((r) => r.difficulty === level);
+
+    if (group.length === 0) {
+      return { difficulty: diff, games: 0, bestTime: '--', avgTime: '--' };
+    }
+
+    const times = group.map((r) => r.solve_time_ms);
+    return {
+      difficulty: diff,
+      games: group.length,
+      bestTime: formatDuration(Math.min(...times)),
+      avgTime: formatDuration(times.reduce((a, b) => a + b, 0) / times.length),
+    };
+  });
+
+  return { totalGames, totalWins, bestTime, averageTime, byDifficulty };
+}
 
 // ---------------------------------------------------------------------------
 // Animation variants
@@ -71,7 +113,105 @@ const itemVariants = {
 // ---------------------------------------------------------------------------
 
 export default function StatsPage() {
-  const stats = PLACEHOLDER_STATS;
+  const { user, loading: authLoading } = useAuth();
+  const [stats, setStats] = useState<StatsSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (authLoading) return;
+
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    async function fetchStats() {
+      try {
+        const res = await fetch('/api/stats');
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || `Failed to fetch stats (${res.status})`);
+        }
+        const { stats: records } = (await res.json()) as { stats: StatRecord[] };
+        if (!cancelled) {
+          setStats(computeStats(records ?? []));
+          setError(null);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : 'Failed to load stats');
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    fetchStats();
+    return () => { cancelled = true; };
+  }, [user, authLoading]);
+
+  // Not logged in
+  if (!authLoading && !user) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <motion.div
+          className="text-center"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 } as const}
+        >
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <BarChart3 className="size-8 text-primary" />
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Your Statistics</h1>
+          </div>
+          <div className="mt-12 flex flex-col items-center gap-4 text-muted-foreground">
+            <LogIn className="size-12 opacity-30" />
+            <p>Sign in to track your stats.</p>
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              <LogIn className="size-4" />
+              Sign In
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Loading
+  if (loading || authLoading) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <BarChart3 className="size-8 text-primary" />
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Your Statistics</h1>
+        </div>
+        <div className="flex justify-center py-24">
+          <Loader2 className="size-8 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    );
+  }
+
+  // Error
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <BarChart3 className="size-8 text-primary" />
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Your Statistics</h1>
+        </div>
+        <div className="text-center py-12 text-muted-foreground">
+          <p className="text-sm">Failed to load stats: {error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const s = stats!;
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -102,7 +242,7 @@ export default function StatsPage() {
           <Card>
             <CardContent className="flex flex-col items-center pt-6">
               <Target className="size-6 text-primary mb-2" />
-              <p className="text-2xl font-bold">{stats.totalGames}</p>
+              <p className="text-2xl font-bold">{s.totalGames}</p>
               <p className="text-xs text-muted-foreground">Games Played</p>
             </CardContent>
           </Card>
@@ -112,7 +252,7 @@ export default function StatsPage() {
           <Card>
             <CardContent className="flex flex-col items-center pt-6">
               <Trophy className="size-6 text-primary mb-2" />
-              <p className="text-2xl font-bold">{stats.totalWins}</p>
+              <p className="text-2xl font-bold">{s.totalWins}</p>
               <p className="text-xs text-muted-foreground">Games Won</p>
             </CardContent>
           </Card>
@@ -122,7 +262,7 @@ export default function StatsPage() {
           <Card>
             <CardContent className="flex flex-col items-center pt-6">
               <Clock className="size-6 text-primary mb-2" />
-              <p className="text-2xl font-bold">{stats.bestTime}</p>
+              <p className="text-2xl font-bold">{s.bestTime}</p>
               <p className="text-xs text-muted-foreground">Best Time</p>
             </CardContent>
           </Card>
@@ -132,8 +272,8 @@ export default function StatsPage() {
           <Card>
             <CardContent className="flex flex-col items-center pt-6">
               <TrendingUp className="size-6 text-primary mb-2" />
-              <p className="text-2xl font-bold">{stats.currentStreak}</p>
-              <p className="text-xs text-muted-foreground">Current Streak</p>
+              <p className="text-2xl font-bold">{s.averageTime}</p>
+              <p className="text-xs text-muted-foreground">Average Time</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -152,7 +292,7 @@ export default function StatsPage() {
           By Difficulty
         </motion.h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {stats.byDifficulty.map((entry) => (
+          {s.byDifficulty.map((entry) => (
             <motion.div key={entry.difficulty} variants={itemVariants}>
               <Card>
                 <CardHeader className="pb-2">
@@ -163,7 +303,7 @@ export default function StatsPage() {
                     <Badge variant="outline">{entry.games} games</Badge>
                   </div>
                   <CardDescription>
-                    {entry.wins} wins &middot; Best: {entry.bestTime} &middot; Avg: {entry.avgTime}
+                    Best: {entry.bestTime} &middot; Avg: {entry.avgTime}
                   </CardDescription>
                 </CardHeader>
               </Card>
