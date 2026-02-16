@@ -97,6 +97,13 @@ function GameOverDialog() {
   const { user } = useAuth();
   const submittedRef = useRef(false);
 
+  // Reset the submitted flag when a new game starts
+  useEffect(() => {
+    if (!isComplete) {
+      submittedRef.current = false;
+    }
+  }, [isComplete]);
+
   useEffect(() => {
     if (!isComplete || !user || submittedRef.current) return;
     submittedRef.current = true;
@@ -111,7 +118,11 @@ function GameOverDialog() {
         mistakesMade,
         puzzleHash: puzzle.join(''),
       }),
-    }).catch(() => {});
+    })
+      .then((res) => {
+        if (!res.ok) res.json().then((b) => console.error('Stats save failed:', res.status, b));
+      })
+      .catch((err) => console.error('Stats save failed:', err));
   }, [isComplete, user, difficulty, elapsedMs, hintsUsed, mistakesMade, puzzle]);
 
   if (!isComplete) return null;

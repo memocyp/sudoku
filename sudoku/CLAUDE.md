@@ -63,9 +63,11 @@ Both stores use immutable updates — boards/candidates are cloned via spread `[
 
 Supabase clients in `src/lib/supabase/`. The app runs without Supabase credentials — `isSupabaseConfigured` guard in `client.ts` prevents crashes. `useAuth` hook short-circuits all operations when unconfigured.
 
+**Admin client** (`src/lib/supabase/admin.ts`): Server-only client using `SUPABASE_SERVICE_ROLE_KEY` that bypasses RLS. Used in API routes for privileged operations like upserting profiles. Returns `null` if the service role key is not configured.
+
 **API routes** are fully wired to Supabase:
 - `GET /api/stats` returns the user's `solve_times` records (requires auth).
-- `POST /api/stats` inserts a new solve time record.
+- `POST /api/stats` upserts the user's profile via admin client (bypasses RLS), then inserts a new solve time record. The profile upsert ensures the `profiles` FK constraint is satisfied even if the `handle_new_user` trigger didn't fire.
 - `GET /api/leaderboard?difficulty={name}` returns ranked entries with profile display names.
 
 **Frontend pages** fetch from these API routes:

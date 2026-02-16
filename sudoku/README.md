@@ -162,9 +162,10 @@ Create a `.env.local` file in the project root (optional — the app runs withou
 # Supabase (required for auth, stats persistence, leaderboards)
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 
-Get these from your [Supabase Dashboard](https://supabase.com/dashboard/project/_/settings/api) → Settings → API.
+Get the URL and anon key from your [Supabase Dashboard](https://supabase.com/dashboard/project/_/settings/api) → Settings → API. The service role key is on the same page — it bypasses RLS and is used server-side only for profile management.
 
 ---
 
@@ -284,6 +285,7 @@ In the [Vercel Dashboard](https://vercel.com/dashboard) → Your Project → Set
 |----------|-------|
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://your-project.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `your-anon-key` |
+| `SUPABASE_SERVICE_ROLE_KEY` | `your-service-role-key` |
 
 Or via CLI:
 

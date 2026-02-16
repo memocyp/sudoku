@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/server';
+import { createServiceClient } from '@/lib/supabase/admin';
 
 export async function GET(_request: NextRequest) {
   if (!isSupabaseConfigured) {
@@ -51,6 +52,22 @@ export async function POST(request: NextRequest) {
 
   if (!difficulty || !solveTimeMs) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+  }
+
+  // Ensure profile exists (trigger may not have fired for pre-existing users)
+  // Uses admin client (service_role) to bypass RLS — profiles table has no INSERT policy
+  const admin = createServiceClient();
+  if (admin) {
+    const { error: profileError } = await admin
+      .from('profiles')
+      .upsert(
+        { id: user.id, display_name: user.user_metadata?.name ?? user.email ?? 'Anonymous' },
+        { onConflict: 'id', ignoreDuplicates: true },
+      );
+
+    if (profileError) {
+      console.error('Profile upsert failed:', profileError.message);
+    }
   }
 
   const { data, error } = await supabase
