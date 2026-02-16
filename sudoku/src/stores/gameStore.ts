@@ -27,6 +27,7 @@ export interface GameState {
   solution: Board;
   board: Board;
   candidates: CandidateGrid;
+  notes: CandidateGrid;
   difficulty: Difficulty;
 
   // Game state
@@ -119,6 +120,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   solution: emptyBoard(),
   board: emptyBoard(),
   candidates: emptyCandidates(),
+  notes: emptyCandidates(),
   difficulty: 'easy' as Difficulty,
 
   selectedCell: null,
@@ -155,6 +157,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       solution: cloneBoard(puzzleData.solution),
       board,
       candidates,
+      notes: emptyCandidates(),
       difficulty,
       selectedCell: null,
       isNotesMode: false,
@@ -175,7 +178,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   enterDigit: async (digit: number) => {
     const state = get();
-    const { selectedCell, puzzle, solution, board, candidates, history, historyIndex } = state;
+    const { selectedCell, puzzle, solution, board, candidates, notes, history, historyIndex } = state;
     if (selectedCell === null) return;
 
     // Cannot overwrite a given cell
@@ -183,6 +186,10 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     const newBoard = cloneBoard(board);
     newBoard[selectedCell] = digit;
+
+    // Clear notes for the cell that was just filled
+    const newNotes = cloneCandidates(notes);
+    newNotes[selectedCell] = 0;
 
     // Check for mistake
     let newMistakes = state.mistakesMade;
@@ -203,6 +210,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({
       board: newBoard,
       candidates: newCandidates,
+      notes: newNotes,
       mistakesMade: newMistakes,
       isComplete: complete,
       isTimerRunning: complete ? false : state.isTimerRunning,
@@ -212,16 +220,16 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   toggleNote: (digit: number) => {
     const state = get();
-    const { selectedCell, puzzle, board, candidates } = state;
+    const { selectedCell, puzzle, board, notes } = state;
     if (selectedCell === null) return;
 
     // Cannot annotate a given or filled cell
     if (puzzle[selectedCell] !== 0 || board[selectedCell] !== 0) return;
 
-    const newCandidates = cloneCandidates(candidates);
-    newCandidates[selectedCell] = newCandidates[selectedCell] ^ digitToBit(digit);
+    const newNotes = cloneCandidates(notes);
+    newNotes[selectedCell] = newNotes[selectedCell] ^ digitToBit(digit);
 
-    set({ candidates: newCandidates });
+    set({ notes: newNotes });
   },
 
   erase: async () => {

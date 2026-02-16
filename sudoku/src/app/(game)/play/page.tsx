@@ -176,9 +176,25 @@ function HintOverlay() {
 // Board placeholder (renders the 9x9 grid)
 // ---------------------------------------------------------------------------
 
+function CandidateGrid({ mask }: { mask: number }) {
+  return (
+    <div className="grid grid-cols-3 grid-rows-3 w-full h-full p-px">
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => (
+        <span
+          key={d}
+          className="flex items-center justify-center text-[8px] sm:text-[10px] leading-none text-muted-foreground"
+        >
+          {mask & (1 << d) ? d : ''}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function SudokuBoard() {
   const board = useGameStore((s) => s.board);
   const puzzle = useGameStore((s) => s.puzzle);
+  const notes = useGameStore((s) => s.notes);
   const selectedCell = useGameStore((s) => s.selectedCell);
   const selectCell = useGameStore((s) => s.selectCell);
 
@@ -189,6 +205,8 @@ function SudokuBoard() {
         const col = index % 9;
         const isGiven = puzzle[index] !== 0;
         const isSelected = selectedCell === index;
+        const isEmpty = value === 0;
+        const hasNotes = isEmpty && notes[index] !== 0;
 
         return (
           <button
@@ -205,7 +223,7 @@ function SudokuBoard() {
             onClick={() => selectCell(index)}
             aria-label={`Cell row ${row + 1} column ${col + 1}${value ? ` value ${value}` : ' empty'}`}
           >
-            {value !== 0 ? value : ''}
+            {value !== 0 ? value : hasNotes ? <CandidateGrid mask={notes[index]} /> : ''}
           </button>
         );
       })}
